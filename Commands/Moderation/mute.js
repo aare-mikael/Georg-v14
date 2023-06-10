@@ -1,12 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { Client, SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
 const ms = require("ms");
 
 module.exports = {
-    moderatorOnly: true,
     data: new SlashCommandBuilder()
         .setName("mute")
         .setDescription("Mute a member from the guild.")
-        .setDMPermission(false)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addUserOption(option =>
             option.setName("target")
                 .setDescription("Select the user you wish to mute.")

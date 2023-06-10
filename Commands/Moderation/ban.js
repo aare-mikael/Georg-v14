@@ -1,11 +1,10 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
-    moderatorOnly: true,
     data: new SlashCommandBuilder()
         .setName("ban")
         .setDescription("Ban a user from the discord server.")
-        .setDMPermission(false)
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
         .addUserOption(option =>
             option.setName("target")
                 .setDescription("User to be banned.")

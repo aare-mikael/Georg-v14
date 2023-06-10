@@ -1,4 +1,4 @@
-const { ActivityType } = require('discord.js');
+const { Client, ActivityType } = require('discord.js');
 const mongoose = require('mongoose');
 const config = require("../../config.json");
 require("colors");
@@ -7,6 +7,7 @@ module.exports = {
     name: "ready",
     once: true,
     async execute(client) {
+        
         await mongoose.connect(config.mongodb || '', {
             keepAlive: true,
         });

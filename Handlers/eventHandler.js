@@ -2,7 +2,6 @@ function loadEvents(client) {
     const ascii = require('ascii-table');
     const fs = require('fs');
     const table = new ascii().setHeading('Events', 'Status');
-    require("colors");
 
     const folders = fs.readdirSync('./Events');
     for (const folder of folders) {
@@ -12,10 +11,10 @@ function loadEvents(client) {
             const event = require(`../Events/${folder}/${file}`);
 
             if (event.rest) {
-                if (event.once)
+                if(event.once)
                     client.rest.once(event.name, (...args) =>
-                        event.execute(...args, client)
-                    );
+                    event.execute(...args, client)
+                );
                 else
                     client.rest.on(event.name, (...args) =>
                         event.execute(...args, client)
@@ -29,7 +28,7 @@ function loadEvents(client) {
             continue;
         }
     }
-    return console.log(table.toString(), "\n[+]".green + " Loaded events");
+    return console.log(table.toString(), "\nLoaded events");
 }
 
-module.exports = { loadEvents };
+module.exports = {loadEvents};

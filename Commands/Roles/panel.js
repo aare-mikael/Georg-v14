@@ -5,7 +5,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("panel")
         .setDescription(" reaction role panel.")
-        .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
     async execute(interaction) {
         const { options, guildId, guild, channel } = interaction;
@@ -17,8 +16,8 @@ module.exports = {
                 return interaction.reply({ content: "This server does not have any data.", ephemeral: true });
 
             const panelEmbed = new EmbedBuilder()
-                .setDescription("Select a role below to receive updates")
-                .setColor("#235ee7")
+                .setDescription("Please select a role below")
+                .setColor("Aqua")
 
             const options = data.roles.map(x => {
                 const role = guild.roles.cache.get(x.roleId);

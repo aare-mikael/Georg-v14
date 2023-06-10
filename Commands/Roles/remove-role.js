@@ -1,44 +1,67 @@
-const rrSchema = require("../../Models/ReactionRoles");
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("removerole")
-        .setDescription("Removes custom reaction role.")
-        .setDMPermission(false)
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+    .setName("remove-role")
+    .setDescription("Remove a role from a user.")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addUserOption(option =>
+        option.setName("user")
+        .setDescription("The user to remove the role from.")
+        .setRequired(true)
+        )
         .addRoleOption(option =>
             option.setName("role")
-                .setDescription("Role to be removed")
-                .setRequired(true)
-        ),
-    async execute(interaction) {
-        const { options, guildId, member } = interaction;
+            .setDescription("The role to remove from the user.")
+            .setRequired(true)
+            ),
 
-        const role = options.getRole("role");
+            async execute(interaction, client) {
+                const user = interaction.options.getUser("user");
+                const role = interaction.options.getRole("role");
+                const member = await interaction.guild.members.fetch(user.id);
 
-        try {
+                if (!member.roles.cache.has(role.id)) {
+                    const embed = new EmbedBuilder()
+                    .setColor("#ff0000")
+                    .setDescription(`User ${user} doesn't have the role \`${role.name}\`.`)
+                    .setAuthor({
+                        name: interaction.user.tag,
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                    })
+                    .setFooter({ text: `Requested by ${interaction.user.tag}` })
+                    .setTimestamp()
+                    await interaction.reply({ embeds: [embed], ephemeral: true })
+                    return;
+                }
 
-            const data = await rrSchema.findOne({ GuildID: guildId });
+                try {
+                    await interaction.guild.members.cache.get(user.id).roles.remove(role)
+                    const embed = new EmbedBuilder()
+                    .setColor(role.color)
+                    .setAuthor({
+                        name: interaction.user.tag,
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                    })
+                    .setDescription(`Succesfully rempved role \`${role.name}\` from user \`${user.tag}\`.`)
+                    .setFooter({ text: `Requested by ${interaction.user.tag}` })
+                    .setTimestamp()
 
-            if (!data)
-                return interaction.reply({ content: "This server does not have any data.", ephemeral: true });
-
-            const roles = data.roles;
-            const findRole = roles.find((r) => r.roleId === role.id);
-
-            if (!findRole)
-                return interaction.reply({ content: "This role does not exist.", ephemeral: true });
-
-            const filteredRoles = roles.filter((r) => r.roleId !== role.id);
-            data.roles = filteredRoles;
-
-            await data.save();
-
-            return interaction.reply({ embeds:[new EmbedBuilder().setDescription(`Removed role **${role.name}**`).setColor("#235ee7").setTimestamp()], ephemeral: true });
-
-        } catch (err) {
-            console.log(err);
-        }
-    }
+                    await interaction.reply({ embeds: [embed], ephemeral: true })
+                    } catch (error) {
+                        console.error(error)
+                        const embed = new EmbedBuilder()
+                        .setColor("#ff0000")
+                        .setAuthor({
+                            name: interaction.user.tag,
+                            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                        })
+                        .setFooter({ text: `Requested by ${interaction.user.tag}` })
+                        .setTimestamp()
+                        .setDescription(
+                            `Failed to remove role \`${role.name}\` from user \`${user.tag}\`.`
+                        )
+                        await interaction.reply({ embeds: [embed], ephemeral: true })
+                    }
+            }
 }

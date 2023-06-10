@@ -1,12 +1,11 @@
-const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, InteractionCollector } = require("discord.js");
 const warningSchema = require("../../Models/Warning");
 
 module.exports = {
-    moderatorOnly: true,
     data: new SlashCommandBuilder()
         .setName("warnings")
-        .setDescription("Warn users who do not behave according to our community rules.")
-        .setDMPermission(false)
+        .setDescription("Fully complete warning system.")
+        .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
         .addSubcommand(subcommand =>
             subcommand.setName("add")
                 .setDescription("Add a warning to a user.")
@@ -104,42 +103,18 @@ module.exports = {
                         data.Content.push(warnContent);
                     }
                     data.save();
+                });
 
-                    if (Object.keys(data.Content).length == 3) {
-                        try {
-                            if (member.roles.highest.position >= interaction.member.roles.highest.position) {
-                                embed.setColor("Blue")
-                                    .setDescription(`I would normally kick ${target} because he reached 3 warns, but he's higher than me :(`)
-                                    .setFooter({ text: target.tag, iconURL: target.displayAvatarURL({ dynamic: true }) })
-                                    .setTimestamp();
-
-                                return interaction.reply({ embeds: [embed] });
-                            } else {
-                                await member.kick("Reached maximum of 3 warns.");
-
-                                embed.setColor("Red")
-                                    .setDescription('Reached maximum of 3 warns.')
-                                    .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
-                                    .setTimestamp();
-                                return interaction.reply({ embeds: [embed] });
-                            }
-
-                        } catch (err) {
-                            console.log(err);
-                        }
-                    } else {
-                        embed.setColor("Orange")
-                            .setDescription(`
+                embed.setColor("Green")
+                    .setDescription(`
                 Warning added: ${userTag} | ||${target.id}||
                 **Reason**: ${reason}
                 **Evidence**: ${evidence}
                 `)
-                            .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
-                            .setTimestamp();
+                    .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
+                    .setTimestamp();
 
-                        interaction.reply({ embeds: [embed] });
-                    }
-                });
+                interaction.reply({ embeds: [embed] });
 
                 break;
             case "check":
@@ -160,14 +135,14 @@ module.exports = {
                             .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
                             .setTimestamp();
 
-                        interaction.reply({ embeds: [embed], ephemeral: true });
+                        interaction.reply({ embeds: [embed] });
                     } else {
                         embed.setColor("Red")
                             .setDescription(`${userTag} | ||${target.id}|| has no warnings.`)
                             .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
                             .setTimestamp();
 
-                        interaction.reply({ embeds: [embed], ephemeral: true });
+                        interaction.reply({ embeds: [embed] });
                     }
                 });
 
@@ -193,7 +168,7 @@ module.exports = {
                             .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
                             .setTimestamp();
 
-                        interaction.reply({ embeds: [embed], ephemeral: true });
+                        interaction.reply({ embeds: [embed] });
                     }
                 });
                 break;
@@ -204,7 +179,7 @@ module.exports = {
                     if (data) {
                         await warningSchema.findOneAndDelete({ GuildID: guildId, UserID: target.id, UserTag: userTag });
 
-                        embed.setColor("Blue")
+                        embed.setColor("Green")
                             .setDescription(`${userTag}'s warnings were cleared. | ||${target.id}||`)
                             .setFooter({ text: member.user.tag, iconURL: member.displayAvatarURL({ dynamic: true }) })
                             .setTimestamp();

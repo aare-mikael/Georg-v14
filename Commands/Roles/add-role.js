@@ -1,68 +1,67 @@
-const rrSchema = require("../../Models/ReactionRoles");
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("addrole")
-        .setDescription("Add custom reaction role.")
-        .setDMPermission(false)
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
+    .setName("add-role")
+    .setDescription("Add a role to a user.")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addUserOption(option =>
+        option.setName("user")
+        .setDescription("The user to add the role to.")
+        .setRequired(true)
+        )
         .addRoleOption(option =>
             option.setName("role")
-                .setDescription("Role to be assigned")
-                .setRequired(true)
-        )
-        .addStringOption(option =>
-            option.setName("description")
-                .setDescription("Description of the role.")
-                .setRequired(false)
-        )
-        .addStringOption(option =>
-            option.setName("emoji")
-                .setDescription("Emoji for the role.")
-                .setRequired(false)
-        ),
-    async execute(interaction) {
-        const { options, guildId, member } = interaction;
+            .setDescription("The role to add to the user.")
+            .setRequired(true)
+            ),
 
-        const role = options.getRole("role");
-        const description = options.getString("description");
-        const emoji = options.getString("emoji");
+            async execute(interaction, client) {
+                const user = interaction.options.getUser("user");
+                const role = interaction.options.getRole("role");
+                const member = await interaction.guild.members.fetch(user.id);
 
-        try {
-
-            if (role.position >= member.roles.highest.position)
-                return interaction.reply({ content: "I don't have permissions for that.", ephemeral: true });
-
-            const data = await rrSchema.findOne({ GuildID: guildId });
-
-            const newRole = {
-                roleId: role.id,
-                roleDescription: description || "No description.",
-                roleEmoji: emoji || "",
-            }
-
-            if (data) {
-                let roleData = data.roles.find((x) => x.roleId === role.id);
-
-                if (roleData) {
-                    roleData = newRoleData;
-                } else {
-                    data.roles = [...data.roles, newRole]
+                if (member.roles.cache.has(role.id)) {
+                    const embed = new EmbedBuilder()
+                    .setColor("#ff0000")
+                    .setDescription(`User ${user} already has the role \`${role.name}\`.`)
+                    .setAuthor({
+                        name: interaction.user.tag,
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                    })
+                    .setFooter({ text: `Requested by ${interaction.user.tag}` })
+                    .setTimestamp()
+                    await interaction.reply({ embeds: [embed], ephemeral: true })
+                    return;
                 }
 
-                await data.save();
-            } else {
-                await rrSchema.create({
-                    GuildID: guildId,
-                    roles: newRole,
-                });
+                try {
+                    await interaction.guild.members.cache.get(user.id).roles.add(role)
+                    const embed = new EmbedBuilder()
+                    .setColor(role.color)
+                    .setAuthor({
+                        name: interaction.user.tag,
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                    })
+                    .setDescription(`Succesfully added role \`${role.name}\` to user \`${user.tag}\`.`)
+                    .setFooter({ text: `Requested by ${interaction.user.tag}` })
+                    .setTimestamp()
+
+                    await interaction.reply({ embeds: [embed], ephemeral: true })
+                    } catch (error) {
+                        console.error(error)
+                        const embed = new EmbedBuilder()
+                        .setColor("#ff0000")
+                        .setAuthor({
+                            name: interaction.user.tag,
+                            iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                        })
+                        .setFooter({ text: `Requested by ${interaction.user.tag}` })
+                        .setTimestamp()
+                        .setDescription(
+                            `Failed to add role \`${role.name}\` to user \`${user.tag}\`.`
+                        )
+                        await interaction.reply({ embeds: [embed], ephemeral: true })
+                    }
             }
-
-            return interaction.reply({ embeds:[new EmbedBuilder().setDescription(`Created new role **${role.name}**`).setColor("#235ee7").setTimestamp()], ephemeral: true });
-
-        } catch (err) {
-            console.log(err);
-        }
-    }
 }

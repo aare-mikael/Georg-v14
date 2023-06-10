@@ -1,5 +1,6 @@
 const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
 const client = require("../../index");
+const distube = require("distube");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,7 +31,7 @@ module.exports = {
 
         try {
 
-            client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
+            await client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
             return interaction.reply({ content: "🎶 Request received." });
 
         } catch (err) {

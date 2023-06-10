@@ -1,11 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, ChannelType } = require("discord.js");
 
 module.exports = {
-    moderatorOnly: true,
     data: new SlashCommandBuilder()
         .setName("poll")
-        .setDescription("Create a poll and send it to a certain channel.")
-        .setDMPermission(false)
+        .setDescription("Create a poll and send it to a certain channel")
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addStringOption(option =>
             option.setName("description")
                 .setDescription("Describe the poll.")
@@ -14,27 +13,25 @@ module.exports = {
         .addChannelOption(option =>
             option.setName("channel")
                 .setDescription("Where do you want to send the poll to?")
-                .setRequired(false)
+                .setRequired(true)
                 .addChannelTypes(ChannelType.GuildText)
         ),
     async execute(interaction) {
-        const { options, channel } = interaction;
+        const { options } = interaction;
 
-        const pChannel = options.getChannel("channel") || channel;
+        const channel = options.getChannel("channel");
         const description = options.getString("description");
 
         const embed = new EmbedBuilder()
-            .setColor("#235ee7")
-            .setTitle("New Poll")
+            .setColor("Gold")
             .setDescription(description)
             .setTimestamp();
 
         try {
-            const m = await pChannel.send({ embeds: [embed] });
-            pChannel.send("<@&1032785824686817295>");
+            const m = await channel.send({ embeds: [embed] });
             await m.react("✅");
             await m.react("❌");
-            await interaction.reply({ embeds: [new EmbedBuilder().setDescription(`✅ | Poll sent to ${channel}!`).setColor("Green")], ephemeral: true });
+            await interaction.reply({ content: "Poll was succesfully sent to the channel.", ephemeral: true });
         } catch (err) {
             console.log(err);
         }
