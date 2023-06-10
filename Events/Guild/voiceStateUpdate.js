@@ -4,6 +4,8 @@ const {
   joinVoiceChannel,
   createAudioPlayer,
   createAudioResource,
+  AudioPlayer,
+  VoiceConnectionStatus,
 } = require("@discordjs/voice");
 const mongoose = require("mongoose");
 const mongodb = require("../../config.json").mongodb;
@@ -20,20 +22,22 @@ module.exports = {
     // Georg
     if (newUser.id == 741703921877123164) return;
 
-    joinVoiceChannel({
+    const resource = createAudioResource(
+      "https://www.myinstants.com/media/sounds/lets-go_fIvYyAr.mp3",
+      {
+        inlineVolume: true,
+      }
+    );
+    const connection = joinVoiceChannel({
       channelId: newUser.channel.id,
-      guildId: newUser.channel.guildId,
+      guildId: newUser.channel.guild.id,
       adapterCreator: newUser.channel.guild.voiceAdapterCreator,
     });
 
-    const sound = createAudioResource(
-      "C:/Users/Mikae/Downloads/y2mate-mp3cut_sRzY6rh(1).mp3"
-    );
     const player = createAudioPlayer();
-    player.play(sound);
-
-    const link = "";
-
+    connection.subscribe(player);
+    player.play(resource);
+    /*
     await mongoose
       .connect(mongodb, {
         useNewUrlParser: true,
@@ -55,25 +59,10 @@ module.exports = {
               new: true,
             }
           );
-          // const sound = result.introSound;
-
-          // const resource = createAudioResource(sound);
-          // player.play(resource);
-
-          // voiceChannel.join().then(connection => {
-          // const dispatcher = connection.play(sound);
-
-          //                    client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
-
-          //                    dispatcher.on('finish', () => voiceChannel.leave());
         } finally {
           mongoose.connection.close();
         }
-      });
-
-    // const sound = result.introSound;
-    // const player = await createAudioPlayer(sound);
-
+      });*/
     return;
   },
 };
