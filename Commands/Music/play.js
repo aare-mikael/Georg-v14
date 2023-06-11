@@ -24,11 +24,6 @@ module.exports = {
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
-        const playing = client.distube.isPlaying(guild);
-
-        console.log("Is playing?");
-        console.log(playing);
-
         if (!member.voice.channelId == guild.members.me.voice.channelId) {
             embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
             return interaction.reply({ embeds: [embed], ephemeral: true });
