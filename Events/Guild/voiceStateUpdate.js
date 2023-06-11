@@ -14,36 +14,36 @@ module.exports = {
 
     // Georg_v12
     if (newUser.id == 741703921877123164) return;
-    
+
     if (mongoose.connection.readyState !== 1) {
-    await mongoose.connect(mongodb, {
+      await mongoose.connect(mongodb, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
-        });
+      });
+      console.log("log lmao")
     }
-        try {
-            const user = await discordUsers.findOne({id: newUser.id});
-            if (user) {
-              const introSound = user.introSound;
-              if (introSound) {
-              const resource = createAudioResource(introSound, { inlineVolume: true });
-              const connection = joinVoiceChannel({
-                channelId: newUser.channel.id,
-                guildId: newUser.channel.guild.id,
-                adapterCreator: newUser.channel.guild.voiceAdapterCreator,
-              });
-      
-              const player = createAudioPlayer();
-              connection.subscribe(player);
-              player.play(resource);
-              player.on("error", console.error);
-            }
-            }
-        } catch (err) {
-            console.log(err);
-            return;
-        } 
+    try {
+      const user = await discordUsers.findOne({ id: newUser.id });
+      if (user) {
+        const introSound = user.introSound;
+        if (introSound) {
+          const resource = createAudioResource(introSound, { inlineVolume: true });
+          const connection = joinVoiceChannel({
+            channelId: newUser.channel.id,
+            guildId: newUser.channel.guild.id,
+            adapterCreator: newUser.channel.guild.voiceAdapterCreator,
+          });
+
+          const player = createAudioPlayer();
+          connection.subscribe(player)
+          player.play(resource)
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return;
+    }
     return;
   },
 };
