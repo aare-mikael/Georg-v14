@@ -37,10 +37,7 @@ module.exports = {
               const player = createAudioPlayer();
               connection.subscribe(player);
               player.play(resource);
-              
-              player.on(AudioPlayerStatus.Idle, () => {
-                player.stop();
-            });
+              player.on("error", console.error);
             }
             }
         } catch (err) {
