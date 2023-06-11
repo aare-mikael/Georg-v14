@@ -37,9 +37,7 @@ module.exports = {
               const player = createAudioPlayer();
               connection.subscribe(player);
               player.play(resource);
-
-
-              setTimeout(console.log("Waiting 60 seconds before checking if player is Idle"), 60000);
+              
               player.on(AudioPlayerStatus.Idle, () => {
                 player.stop();
             });
