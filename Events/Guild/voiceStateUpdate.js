@@ -39,7 +39,7 @@ module.exports = {
               player.play(resource);
 
 
-              setInterval(console.log("Waiting 5 seconds before checking if player is Idle"), 5000);
+              setTimeout(console.log("Waiting 60 seconds before checking if player is Idle"), 60000);
               player.on(AudioPlayerStatus.Idle, () => {
                 player.stop();
             });
