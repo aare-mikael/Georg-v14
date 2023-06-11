@@ -10,10 +10,10 @@ module.exports = {
     if (oldUser.channel != (null || undefined)) return;
 
     // Georg_v14
-    if (newUser.id == 1089200999933169714) return;
+    if (newUser.id == '1089200999933169714') return;
 
     // Georg_v12
-    if (newUser.id == 741703921877123164) return;
+    if (newUser.id == '741703921877123164') return;
 
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongodb, {
@@ -21,7 +21,6 @@ module.exports = {
         useUnifiedTopology: true,
         useFindAndModify: false,
       });
-      console.log("log lmao")
     }
     try {
       const user = await discordUsers.findOne({ id: newUser.id });
