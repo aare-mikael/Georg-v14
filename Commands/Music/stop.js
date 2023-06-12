@@ -31,7 +31,7 @@ module.exports = {
                 return interaction.reply({ embeds: [embed], ephemeral: true });
             }
 
-            await queue.stop(voiceChannel);
+            // await queue.stop(voiceChannel);
             embed.setColor("Red").setDescription("⏹ The queue has been stopped.");
             await client.distube.stop(voiceChannel);
 
