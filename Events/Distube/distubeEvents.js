@@ -1,15 +1,17 @@
 const client = require("../../index.js");
 const { EmbedBuilder } = require("discord.js");
 
+
+const status = queue =>
+        `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.names.join(', ') || 'Off'}\` | Loop: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All Queue' : 'This Song') : 'Off'
+        }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``
+
 // if the reason this class is used is because a user joins a voice channel, this will return true
 const voiceStateUpdate = (!queue.textChannel)
 
 if (voiceStateUpdate) {
     return;
 } else {
-    const status = queue =>
-        `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.names.join(', ') || 'Off'}\` | Loop: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All Queue' : 'This Song') : 'Off'
-        }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``
     client.distube
         .on('playSong', (queue, song) =>
             queue.textChannel.send({
