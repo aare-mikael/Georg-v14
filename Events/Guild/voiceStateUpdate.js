@@ -1,5 +1,5 @@
 const { GuildMember, Embed, InteractionCollector } = require("discord.js");
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, VoiceConnectionStatus, entersState } = require("@discordjs/voice");
+const { joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioResource, VoiceConnectionStatus, entersState, AudioPlayerStatus } = require("@discordjs/voice");
 const mongoose = require("mongoose");
 const mongodb = require("../../config.json").mongodb;
 const discordUsers = require("../../mongoSchemas/discordUsers");
@@ -34,23 +34,39 @@ module.exports = {
             adapterCreator: newUser.channel.guild.voiceAdapterCreator,
           });
 
-          const player = createAudioPlayer();
+          const player = createAudioPlayer({
+            behaviors: {
+              noSubscriber: NoSubscriberBehavior.Pause,
+            },
+          });
           connection.subscribe(player)
+          const subscription = connection.subscribe(player);
           player.play(resource)
 
-
-          connection.on(VoiceConnectionStatus.Disconnected, async (oldUser, newUser) => {
-            try {
-              await Promise.race([
-                entersState(connection, VoiceConnectionStatus.Signalling, 5_000),
-                entersState(connection, VoiceConnectionStatus.Connecting, 5_000),
-              ]);
-              // Seems to be reconnecting to a new channel - ignore disconnect
-            } catch (error) {
-              // Seems to be a real disconnect which SHOULDN'T be recovered from
-              connection.destroy();
+          setInterval(() => {
+            if (player.state.status == AudioPlayerStatus.Idle) {
+              // console.log(subscription);
+              subscription.unsubscribe();
+              try {
+                connection.destroy(); }
+              catch (err) {
+              }
+              player.stop();
             }
-          });
+          }, 1000);
+
+          // connection.on(VoiceConnectionStatus.Disconnected, async (oldUser, newUser) => {
+          //   try {
+          //     await Promise.race([
+          //       entersState(connection, VoiceConnectionStatus.Signalling, 5_000),
+          //       entersState(connection, VoiceConnectionStatus.Connecting, 5_000),
+          //     ]);
+          //     // Seems to be reconnecting to a new channel - ignore disconnect
+          //   } catch (error) {
+          //     // Seems to be a real disconnect which SHOULDN'T be recovered from
+          //     connection.destroy();
+          //   }
+          // });
 
 
         }

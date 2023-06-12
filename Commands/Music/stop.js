@@ -35,6 +35,8 @@ module.exports = {
             embed.setColor("Red").setDescription("⏹ The queue has been stopped.");
             return interaction.reply({ embeds: [embed], ephemeral: true });
 
+            client.distube.leave(voiceChannel);
+
         } catch (err) {
             console.log(err);
 
