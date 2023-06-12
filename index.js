@@ -17,29 +17,13 @@ const client = new Client({
 });
 
 client.distube = new DisTube(client, {
+  directLinks: true,
   emitNewSongOnly: true,
-  leaveOnFinish: true,
   emitAddSongWhenCreatingQueue: false,
+  leaveOnEmpty: false,
+  leaveOnFinish: true,
+  leaveOnStop: true,
   plugins: [new SpotifyPlugin()]
-});
-
-client.on("unhandledRejection", (reason, p) => {
-  const ChannelID = "930507911979995216";
-  console.error("Unhandled promise rejection:", reason, p);
-  const Embed = new EmbedBuilder()
-    .setColor("#235ee7")
-    .setTimestamp()
-    .setFooter({ text: "Crash Prevention" })
-    .setTitle("Error Encountered");
-  const Channel = client.channels.cache.get(ChannelID);
-  if (!Channel) return;
-  Channel.send({
-    embeds: [
-      Embed.setDescription(
-        "**Unhandled Rejection/Catch:\n\n** ```" + reason + "```"
-      ),
-    ],
-  });
 });
 
 client.config = require("./config.json");

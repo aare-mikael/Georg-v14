@@ -15,6 +15,8 @@ module.exports = {
     // Georg_v12
     if (newUser.id == '741703921877123164') return;
 
+
+
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongodb, {
         useNewUrlParser: true,
