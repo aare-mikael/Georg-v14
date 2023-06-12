@@ -33,7 +33,7 @@ module.exports = {
 
             await queue.stop(voiceChannel);
             embed.setColor("Red").setDescription("⏹ The queue has been stopped.");
-            await client.distube.stop();
+            await client.distube.stop(voiceChannel);
 
             return interaction.reply({ embeds: [embed], ephemeral: true });
 
