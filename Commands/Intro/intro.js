@@ -1,4 +1,4 @@
-const { GuildMember, Embed, InteractionCollector } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, ChannelType } = require("discord.js");
 const { joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioResource, VoiceConnectionStatus, entersState, AudioPlayerStatus } = require("@discordjs/voice");
 const mongoose = require("mongoose");
 const mongodb = require("../../config.json").mongodb;
