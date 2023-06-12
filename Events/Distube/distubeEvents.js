@@ -4,10 +4,6 @@ const { EmbedBuilder } = require("discord.js");
 const status = queue =>
     `Volume: \`${queue.volume}%\` | Filter: \`${queue.filters.names.join(', ') || 'Off'}\` | Loop: \`${queue.repeatMode ? (queue.repeatMode === 2 ? 'All Queue' : 'This Song') : 'Off'
     }\` | Autoplay: \`${queue.autoplay ? 'On' : 'Off'}\``
-    
-    // This will be true if the voiceStateUpdate event is triggered instead of if the play-command was used.
-    if (!queue.textChannel) return;
-    
 client.distube
     .on('playSong', (queue, song) =>
         queue.textChannel.send({
