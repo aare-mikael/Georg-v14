@@ -7,7 +7,9 @@ const client = require("../../index");
 const distube = require("distube");
 
 module.exports = {
-  name: "intro",
+    data: new SlashCommandBuilder()
+	.setName("intro")
+	.setDescription("Play your own intro sound."),
   async execute(interaction) {
     const { member, guild} = interaction;
 
