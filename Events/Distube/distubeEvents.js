@@ -48,3 +48,7 @@ client.distube
         embeds: [new EmbedBuilder().setColor("Green")
             .setDescription('🏁 | Queue finished!')]
     }))
+    .on('deleteQueue', channel => { channel.send({
+        embeds: [new EmbedBuilder().setColor("Green")
+            .setDescription('🏁 | Queue deleted!')]
+    })})

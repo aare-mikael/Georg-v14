@@ -36,7 +36,7 @@ module.exports = {
 
         try {
 
-            await client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
+            await client.distube.play(voiceChannel, query, { textChannel: channel, member: member }, { leaveOnStop: true, leaveOnEmpty: true, leaveOnFinish: true });
             interaction.editReply({ content: "🎶 Request received." });
             return;
 
