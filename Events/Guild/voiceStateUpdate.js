@@ -3,6 +3,8 @@ const { joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioRe
 const mongoose = require("mongoose");
 const mongodb = require("../../config.json").mongodb;
 const discordUsers = require("../../mongoSchemas/discordUsers");
+const client = require("../../index");
+const distube = require("distube");
 
 module.exports = {
   name: "voiceStateUpdate",
@@ -14,8 +16,6 @@ module.exports = {
 
     // Georg_v12
     if (newUser.id == '741703921877123164') return;
-
-
 
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(mongodb, {
@@ -29,48 +29,7 @@ module.exports = {
       if (user) {
         const introSound = user.introSound;
         if (introSound) {
-          const resource = createAudioResource(introSound, { inlineVolume: true });
-          const connection = joinVoiceChannel({
-            channelId: newUser.channel.id,
-            guildId: newUser.channel.guild.id,
-            adapterCreator: newUser.channel.guild.voiceAdapterCreator,
-          });
-
-          const player = createAudioPlayer({
-            behaviors: {
-              noSubscriber: NoSubscriberBehavior.Pause,
-            },
-          });
-          connection.subscribe(player)
-          const subscription = connection.subscribe(player);
-          player.play(resource)
-
-          setInterval(() => {
-            if (player.state.status == AudioPlayerStatus.Idle) {
-              // console.log(subscription);
-              subscription.unsubscribe();
-              try {
-                connection.destroy(); }
-              catch (err) {
-              }
-              player.stop();
-            }
-          }, 1000);
-
-          // connection.on(VoiceConnectionStatus.Disconnected, async (oldUser, newUser) => {
-          //   try {
-          //     await Promise.race([
-          //       entersState(connection, VoiceConnectionStatus.Signalling, 5_000),
-          //       entersState(connection, VoiceConnectionStatus.Connecting, 5_000),
-          //     ]);
-          //     // Seems to be reconnecting to a new channel - ignore disconnect
-          //   } catch (error) {
-          //     // Seems to be a real disconnect which SHOULDN'T be recovered from
-          //     connection.destroy();
-          //   }
-          // });
-
-
+          await client.distube.play(voiceChannel, introSound, { leaveOnStop: true, leaveOnFinish: true });
         }
       }
     } catch (err) {
