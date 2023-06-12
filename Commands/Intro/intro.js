@@ -1,69 +1,50 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, ChannelType } = require("discord.js");
-const mongoose = require('mongoose');
+const { GuildMember, Embed, InteractionCollector } = require("discord.js");
+const { joinVoiceChannel, createAudioPlayer, NoSubscriberBehavior, createAudioResource, VoiceConnectionStatus, entersState, AudioPlayerStatus } = require("@discordjs/voice");
+const mongoose = require("mongoose");
 const mongodb = require("../../config.json").mongodb;
-const discordUsers = require('../../mongoSchemas/discordUsers');
-const { link } = require("fs");
+const discordUsers = require("../../mongoSchemas/discordUsers");
+const client = require("../../index");
+const distube = require("distube");
 
 module.exports = {
-    data: new SlashCommandBuilder()
-	.setName("introsound")
-	.setDescription("Choose a sound you want to play when you enter a voice channel.")
-    .addStringOption(option =>
-        option.setName("link")
-            .setDescription("Provide the link to the sound.")
-            .setRequired(true)
-    ),
+  name: "intro",
+  async execute(interaction) {
+    const { member, guild} = interaction;
 
-    async execute(interaction, client) {
-        const { options, member } = interaction;
-
-        const link = options.getString("link");
-        const isMP3 = link.slice(-4);
-
-        const embed = new EmbedBuilder()
-
-            if (isMP3 != ".mp3") {
-                embed.setColor("Red").setDescription("You must give a valid link to a .mp3 file.");
-                return interaction.reply({ embeds: [embed], ephemeral: true });
-            } else {
-                embed.setTitle("Introsound")
-                embed.setColor("Purple")
-                embed.addFields(
-                    { name: "User", value: `${member}`, inline: true },
-                    { name: "Introsound-link", value: `${link}`, inline: true },
-                )
-                embed.setTimestamp()    
-            }        
-
-        console.log("user = " + member);
-        console.log("link = " + link);
-
-        await mongoose.connect(mongodb, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-        }).then(async (mongoose) => {
-            try {
-                const result = await discordUsers.findOneAndUpdate({
-                
-                    id: member.user.id,
-                    }, {
-                        user: member.user,
-                        username: member.user.username,
-                        introSound: link,
-                    }, {
-                        upsert: true,
-                        new: true,
-                    })
-                } finally {
-                    mongoose.connection.close();
-                }
-            })   
-        
-        try {
-            const m = await interaction.reply({ embeds: [embed] });
-        } catch (err) {
-            console.log(err);
-        }
+    const voiceChannel = member.voice.channel;
+    const userid = member.id;
+    
+    if (!voiceChannel) {
+        embed.setColor("Red").setDescription("You must be in a voice channel to execute this command.");
+        interaction.editReply({ embeds: [embed], ephemeral: true });
+        return;
     }
-}
+
+    if (!member.voice.channelId == guild.members.me.voice.channelId) {
+        embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
+        interaction.editReply({ embeds: [embed], ephemeral: true });
+        return;
+    }
+
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(mongodb, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+      });
+    }
+    try {
+      const user = await discordUsers.findOne({ id: userid });
+      if (user) {
+        const introSound = user.introSound;
+        if (introSound) {
+          await client.distube.play(voiceChannel, introSound, { leaveOnStop: true, leaveOnFinish: true });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+    return;
+  },
+};
