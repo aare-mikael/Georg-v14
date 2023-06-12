@@ -36,15 +36,15 @@ module.exports = {
 
         try {
 
-            await client.distube.play(voiceChannel, query, { textChannel: channel, member: member }, { leaveOnStop: true, leaveOnEmpty: true, leaveOnFinish: true });
-            interaction.editReply({ content: "🎶 Request received." });
+            await client.distube.play(voiceChannel, query, { textChannel: channel, member: member }, { leaveOnStop: true, leaveOnEmpty: true, leaveOnFinish: true, autoPlay: false });
+            embed.setColor("Green").setDescription("🎶 Request received.");
+            interaction.editReply({ embeds: [embed], ephemeral: true });
             return;
 
         } catch (err) {
             console.log(err);
 
             embed.setColor("Red").setDescription("⛔ | Something went wrong...");
-
             interaction.editReply({ embeds: [embed], ephemeral: true });
             return;
         }
