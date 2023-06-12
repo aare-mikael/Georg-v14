@@ -43,7 +43,7 @@ module.exports = {
                         name: interaction.user.tag,
                         iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
                     })
-                    .setDescription(`Succesfully rempved role \`${role.name}\` from user \`${user.tag}\`.`)
+                    .setDescription(`Successfully removed role \`${role.name}\` from user \`${user.tag}\`.`)
                     .setFooter({ text: `Requested by ${interaction.user.tag}` })
                     .setTimestamp()
 
