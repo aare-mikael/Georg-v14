@@ -37,12 +37,7 @@ module.exports = {
           const queue = await client.distube.getQueue(voiceChannel);
 
           // Sett avspilling til loop: queue
-          let mode = await queue.RepeatMode();
-          if (mode === 2) {
-            console.log("");
-          } else {
-            await queue.setRepeatMode(2);
-          }
+          await queue.setRepeatMode(2);
 
           // sett relevant introlyd som siste element
           await client.distube.play(voiceChannel, introSound);
@@ -54,15 +49,11 @@ module.exports = {
           const queueLength = queue.size;
           await queue.skip(queueLength - 1);
 
-          // la queue begynne på nytt, 
-          if (mode === 2) {
-            console.log("");
-          } else {
-            setTimeout(() => {
-              queue.setRepeatMode(mode);
-            }, 30000);
-          }
-          
+          // la queue begynne på nytt, og sett loop til off etter 30 sekunder
+          setTimeout(() => {
+            queue.setRepeatMode(0);
+          }, 30000);
+                    
           // spol til timestamp lagret fra tidligare - LATER
           // TODO
 
