@@ -33,29 +33,29 @@ module.exports = {
         const introSound = user.introSound;
         if (introSound) {
           
-          // Finn queue
-          const queue = await client.distube.getQueue(voiceChannel);
+          // // Finn queue
+          // const queue = await client.distube.getQueue(voiceChannel);
 
-          // Sett avspilling til loop: queue
-          await queue.setRepeatMode(2);
+          // // Sett avspilling til loop: queue
+          // await queue.setRepeatMode(2);
 
           // sett relevant introlyd som siste element
           await client.distube.play(voiceChannel, introSound);
 
-          // lagre timestamp i noværande element - LATER
-          // TODO
+          // // lagre timestamp i noværande element - LATER
+          // // TODO
 
-          // Finn lengden på queue, skip (queue-1)
-          const queueLength = queue.size;
-          await queue.skip(queueLength - 1);
+          // // Finn lengden på queue, skip (queue-1)
+          // const queueLength = queue.size;
+          // await queue.skip(queueLength - 1);
 
-          // la queue begynne på nytt, og sett loop til off etter 30 sekunder
-          setTimeout(() => {
-            queue.setRepeatMode(0);
-          }, 30000);
+          // // la queue begynne på nytt, og sett loop til off etter 30 sekunder
+          // setTimeout(() => {
+          //   queue.setRepeatMode(0);
+          // }, 30000);
                     
-          // spol til timestamp lagret fra tidligare - LATER
-          // TODO
+          // // spol til timestamp lagret fra tidligare - LATER
+          // // TODO
 
         }
       }
