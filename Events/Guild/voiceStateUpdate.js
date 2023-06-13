@@ -35,8 +35,8 @@ module.exports = {
 
           const queue = await client.distube.getQueue(voiceChannel);
           console.log("Queue: " + queue);
-          const volume = queue.volume;
-          console.log("Volume: " + volume);
+          const duration = queue.duration;
+          console.log("Duration: " + duration);
           const mode = queue.repeatMode;
           console.log("Mode: " + mode);
 
