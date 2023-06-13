@@ -33,12 +33,12 @@ module.exports = {
         const introSound = user.introSound;
         if (introSound) {
 
+          const queue = await client.distube.getQueue(voiceChannel);
+          console.log("Queue: " + queue);
           const volume = queue.volume;
           console.log("Volume: " + volume);
           const mode = queue.repeatMode;
           console.log("Mode: " + mode);
-          const queue = await client.distube.getQueue(voiceChannel);
-          console.log("Queue: " + queue);
 
 
           // // Finn queue
