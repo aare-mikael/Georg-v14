@@ -37,7 +37,7 @@ module.exports = {
           const queue = await client.distube.getQueue(voiceChannel);
 
           // Sett avspilling til loop: queue
-          let mode = await queue.getRepeatMode();
+          let mode = await queue.RepeatMode();
           if (mode === 2) {
             console.log("");
           } else {
