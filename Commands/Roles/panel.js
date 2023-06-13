@@ -13,7 +13,7 @@ module.exports = {
             const data = await rrSchema.findOne({ GuildID: guildId });
 
             if (!data.roles.length > 0)
-                return interaction.reply({ content: "This server does not have any data.", ephemeral: true });
+                return interaction.reply({ content: "This server does not have any data.", ephemeral: false });
 
             const panelEmbed = new EmbedBuilder()
                 .setDescription("Please select a role below")
@@ -41,7 +41,7 @@ module.exports = {
 
             channel.send({ embeds: [panelEmbed], components: menuComponents });
 
-            return interaction.reply({ content: "Succesfully sent your panel.", ephemeral: true });
+            return interaction.reply({ content: "Succesfully sent your panel.", ephemeral: false });
         } catch (err) {
             console.log(err);
         }

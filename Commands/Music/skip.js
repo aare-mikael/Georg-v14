@@ -14,12 +14,12 @@ module.exports = {
 
         if (!voiceChannel) {
             embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], ephemeral: false });
         }
 
         if (!member.voice.channelId == guild.members.me.voice.channelId) {
             embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], ephemeral: false });
         }
 
         try {
@@ -28,19 +28,19 @@ module.exports = {
 
             if (!queue) {
                 embed.setColor("Red").setDescription("There is no active queue.");
-                return interaction.reply({ embeds: [embed], ephemeral: true });
+                return interaction.reply({ embeds: [embed], ephemeral: false });
             }
 
             await queue.skip(voiceChannel);
             embed.setColor("Blue").setDescription("⏩ The song has been skipped.");
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], ephemeral: false });
 
         } catch (err) {
             console.log(err);
 
             embed.setColor("Red").setDescription("⛔ | Something went wrong...");
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], ephemeral: false });
         }
     }
 }

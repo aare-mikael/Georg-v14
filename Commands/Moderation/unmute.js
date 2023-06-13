@@ -27,15 +27,15 @@ module.exports = {
             .setTimestamp();
 
         if (member.roles.highest.position >= interaction.member.roles.highest.position)
-            return interaction.reply({ embeds: [errEmbed], ephemeral: true }); // this if statement is optional (but recommended)
+            return interaction.reply({ embeds: [errEmbed], ephemeral: false }); // this if statement is optional (but recommended)
 
         if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.ModerateMembers))
-            return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+            return interaction.reply({ embeds: [errEmbed], ephemeral: false });
 
         try {
             await member.timeout(null);
 
-            interaction.reply({ embeds: [succesEmbed], ephemeral: true });
+            interaction.reply({ embeds: [succesEmbed], ephemeral: false });
         } catch (err) {
             console.log(err);
         }

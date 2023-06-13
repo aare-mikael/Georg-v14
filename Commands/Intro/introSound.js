@@ -24,7 +24,7 @@ module.exports = {
 
             if (isMP3 != ".mp3") {
                 embed.setColor("Red").setDescription("You must give a valid link to a .mp3 file.");
-                return interaction.reply({ embeds: [embed], ephemeral: true });
+                return interaction.reply({ embeds: [embed], ephemeral: false });
             } else {
                 embed.setTitle("Introsound")
                 embed.setColor("Purple")

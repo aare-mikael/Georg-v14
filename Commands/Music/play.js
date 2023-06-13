@@ -20,17 +20,17 @@ module.exports = {
         const embed = new EmbedBuilder();
 
         embed.setColor("Red").setDescription(`Loading...`);
-        interaction.reply({ embeds: [embed], ephemeral: true });
+        interaction.reply({ embeds: [embed], ephemeral: false });
 
         if (!voiceChannel) {
             embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
-            interaction.editReply({ embeds: [embed], ephemeral: true });
+            interaction.editReply({ embeds: [embed], ephemeral: false });
             return;
         }
 
         if (!member.voice.channelId == guild.members.me.voice.channelId) {
             embed.setColor("Red").setDescription(`You can't use the music player as it is already active in <#${guild.members.me.voice.channelId}>`);
-            interaction.editReply({ embeds: [embed], ephemeral: true });
+            interaction.editReply({ embeds: [embed], ephemeral: false });
             return;
         }
 
@@ -38,14 +38,14 @@ module.exports = {
 
             await client.distube.play(voiceChannel, query, { textChannel: channel, member: member }, { leaveOnStop: true, leaveOnEmpty: false, leaveOnFinish: true, autoPlay: false });
             embed.setColor("Green").setDescription("🎶 Request received.");
-            interaction.editReply({ embeds: [embed], ephemeral: true });
+            interaction.editReply({ embeds: [embed], ephemeral: false });
             return;
 
         } catch (err) {
             console.log(err);
 
             embed.setColor("Red").setDescription("⛔ | Something went wrong...");
-            interaction.editReply({ embeds: [embed], ephemeral: true });
+            interaction.editReply({ embeds: [embed], ephemeral: false });
             return;
         }
     }

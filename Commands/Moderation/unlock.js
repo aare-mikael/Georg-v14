@@ -17,7 +17,7 @@ module.exports = {
                 embeds: [
                     embed.setColor("Red").setDescription("This channel isn't locked.")
                 ],
-                ephemeral: true
+                ephemeral: false
             })
 
             channel.permissionOverwrites.edit(guild.id, {

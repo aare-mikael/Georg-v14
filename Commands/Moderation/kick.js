@@ -28,7 +28,7 @@ module.exports = {
             .setColor(0xc72c3b)
 
         if (member.roles.highest.position >= interaction.member.roles.highest.position)
-            return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+            return interaction.reply({ embeds: [errEmbed], ephemeral: false });
 
         await member.kick(reason);
 

@@ -31,7 +31,7 @@ module.exports = {
         const roleId = options.getRole("welcome-role");
 
         if(!interaction.guild.members.me.permissions.has(PermissionFlagsBits.SendMessages)) {
-            interaction.reply({content: "I don't have permissions for this.", ephemeral: true});
+            interaction.reply({content: "I don't have permissions for this.", ephemeral: false});
         }
 
         welcomeSchema.findOne({Guild: interaction.guild.id}, async (err, data) => {
@@ -43,7 +43,7 @@ module.exports = {
                     Role: roleId.id
                 });
             }
-            interaction.reply({content: 'Succesfully created a welcome message', ephemeral: true});
+            interaction.reply({content: 'Succesfully created a welcome message', ephemeral: false});
         })
     }
 }

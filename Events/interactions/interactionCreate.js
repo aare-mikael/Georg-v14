@@ -22,7 +22,7 @@ module.exports = {
           errEmbed.setDescription(
             "⛔ | Whoops! You don't have permissions for that!"
           );
-          return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+          return interaction.reply({ embeds: [errEmbed], ephemeral: false });
         }
       }
 
@@ -32,14 +32,14 @@ module.exports = {
           errEmbed.setDescription(
             "⛔ | Whoops! You don't have permissions for that!"
           );
-          return interaction.reply({ embeds: [errEmbed], ephemeral: true });
+          return interaction.reply({ embeds: [errEmbed], ephemeral: false });
         }
       }
 
       if (!command) {
         return interaction.reply({
           content: "outdated command",
-          ephemeral: true,
+          ephemeral: false,
         });
       }
 

@@ -85,6 +85,6 @@ module.exports = {
                     })
                 }
 
-                await interaction.reply({ content: "The channel was successfully created.", ephemeral: true })
+                await interaction.reply({ content: "The channel was successfully created.", ephemeral: false })
             }
 }

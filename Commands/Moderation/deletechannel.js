@@ -18,6 +18,6 @@ module.exports = {
 
             channel.delete()
 
-            await interaction.reply({ content: "The channel was successfully deleted.", ephemeral: true })
+            await interaction.reply({ content: "The channel was successfully deleted.", ephemeral: false })
         }
 }

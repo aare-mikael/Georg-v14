@@ -34,7 +34,7 @@ module.exports = {
                 .setDescription(`Please provide a valid member's ID.`)
                 .setColor(0xc72c3b);
 
-            interaction.reply({ embeds: [errEmbed], ephemeral: true });
+            interaction.reply({ embeds: [errEmbed], ephemeral: false });
         }
     }
 }
