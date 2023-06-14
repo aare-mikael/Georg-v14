@@ -2,7 +2,6 @@ const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
 const { Configuration, OpenAIApi } = require("openai");
 const dotenv = require('dotenv').config();
 const georgKey = process.env.georgGPT;
-console.log(georgKey);
 
 const configuration = new Configuration({
     apiKey: georgKey,
@@ -13,6 +12,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
+    console.log(georgKey);
     const response = await openai.createCompletion({
         model: "gpt-3.5-turbo",
         query,
