@@ -11,7 +11,7 @@ const openai = new OpenAIApi(georg);
 async function promptGeorg (query) {
     const completion = await openai.createCompletion({
     model: "gpt-3.5-turbo",
-    prompt: query,
+    query,
     max_tokens:4000
     });
     try {
