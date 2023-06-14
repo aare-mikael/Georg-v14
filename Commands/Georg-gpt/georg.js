@@ -34,14 +34,14 @@ module.exports = {
         const GPTEmbed = new EmbedBuilder()
 
         GPTEmbed
-            .setColor("red")
-            .setDescription("loading...");
+            .setColor("Red")
+            .setDescription("loading..."),
 
         // Runs the actual prompt function
         promptGeorg(query);
 
         GPTEmbed
-            .setColor("purple")
+            .setColor("Purple")
             .setDescription(promptGeorg)
             .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
         return interaction.editReply({ embeds: [GPTEmbed] });
