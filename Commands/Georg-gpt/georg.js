@@ -11,10 +11,10 @@ const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
     const response = await openai.createCompletion({
-        model: "text-davinci-003",
+        model: "gpt-3.5-turbo",
         query,
         temperature: 2,
-        max_tokens: 2000,
+        max_tokens: 100,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
