@@ -21,7 +21,7 @@ async function promptGeorg (query) {
     try {
         const answer = response.data.choices[0].text;
         console.log(answer);
-        return answer;
+        // return answer;
     } catch (err) {
         console.log(err);
     }
@@ -45,13 +45,14 @@ module.exports = {
         GPTEmbed
             .setColor("Red")
             .setDescription("loading..."),
+        interaction.reply({ embeds: [embed], ephemeral: false });
 
         // Runs the actual prompt function
-        await promptGeorg(query);
+        const result = await promptGeorg(query);
 
         GPTEmbed
             .setColor("Purple")
-            .setDescription(promptGeorg)
+            .setDescription(result)
             .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
         return interaction.editReply({ embeds: [GPTEmbed] });
     }
