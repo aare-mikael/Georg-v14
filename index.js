@@ -33,7 +33,7 @@ client.config = dotenv.token;
 
 module.exports = client;
 
-client.login().then(() => {
+client.login(dotenv.token).then(() => {
   loadEvents(client);
   loadCommands(client);
 });
