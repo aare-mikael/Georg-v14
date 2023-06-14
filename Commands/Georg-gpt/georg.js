@@ -11,7 +11,7 @@ const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
     const response = await openai.createCompletion({
-        model: "gpt-3.5-turbo",
+        model: "text-davinci-003",
         query,
         temperature: 2,
         max_tokens: 2000,
