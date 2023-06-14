@@ -3,20 +3,25 @@ const { Configuration, OpenAIApi } = require("openai");
 const georgConfig = require("../../config.json");
 const georgAPI = georgConfig.georgGPT;
 
-const georg = new Configuration({
+const configuration = new Configuration({
     apiKey: georgAPI,
   });
-const openai = new OpenAIApi(georg);
+const openai = new OpenAIApi(configuration);
 
 async function promptGeorg (query) {
     const completion = await openai.createCompletion({
-    model: "gpt-3.5-turbo",
-    query,
-    max_tokens:4000
+        model: "gpt-3.5-turbo",
+        query,
+        temperature: 0.7,
+        max_tokens: 256,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
     });
     try {
-        console.log(completion.data.choices[0].text);
-        return completion.data.choices[0].text;
+        const answer = response.data.choices[0].text;
+        console.log(answer);
+        return answer;
     } catch (err) {
         console.log(err);
     }
