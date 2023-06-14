@@ -25,6 +25,7 @@
         "mongoose": "^7.2.3",
         "nodemon": "^2.0.22",
         "one-liner-joke": "^1.2.2",
+        "openai": "^3.3.0",
         "superagent": "^8.0.9"
     }
 }
