@@ -9,7 +9,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-async function ask(query) {
+async function promptGeorg(query) {
     const response = await openai.createCompletion({
         model: "gpt-3.5-turbo",
         query,
