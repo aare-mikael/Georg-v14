@@ -38,7 +38,7 @@ module.exports = {
             .setDescription("loading..."),
 
         // Runs the actual prompt function
-        promptGeorg(query);
+        await promptGeorg(query);
 
         GPTEmbed
             .setColor("Purple")
