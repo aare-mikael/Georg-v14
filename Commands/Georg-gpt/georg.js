@@ -1,9 +1,9 @@
 const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
 const { Configuration, OpenAIApi } = require("openai");
-const georg = require("../../config.json");
+const georgConfig = require("../../config.json");
 
 const georg = new Configuration({
-    apiKey: georg.config.georg-gpt,
+    apiKey: georgConfig.georg-gpt,
   });
 const openai = new OpenAIApi(georg);
 
