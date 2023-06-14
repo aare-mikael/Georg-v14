@@ -14,8 +14,12 @@ async function promptGeorg (query) {
     prompt: query,
     max_tokens:4000
     });
-    console.log(completion.data.choices[0].text);
-    return completion.data.choices[0].text;
+    try {
+        console.log(completion.data.choices[0].text);
+        return completion.data.choices[0].text;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports = {
