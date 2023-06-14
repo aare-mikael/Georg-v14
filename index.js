@@ -29,7 +29,7 @@ client.distube = new DisTube(client, {
 });
 
 client.commands = new Collection();
-client.config = dotenv.token;
+client.config = dotenv;
 
 module.exports = client;
 
