@@ -11,6 +11,8 @@ const { SpotifyPlugin } = require("@distube/spotify");
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
 
+client.config = require("./config.json");
+
 const client = new Client({
   intents: [Object.keys(GatewayIntentBits)],
   partials: [Object.keys(Partials)],
@@ -26,7 +28,6 @@ client.distube = new DisTube(client, {
   plugins: [new SpotifyPlugin()]
 });
 
-client.config = require("./config.json");
 client.commands = new Collection();
 
 module.exports = client;
