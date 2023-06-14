@@ -6,13 +6,9 @@ const georgKey = process.env.georgGPT;
 const configuration = new Configuration({
     apiKey: georgKey,
   });
-
-
-
 const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
-    console.log(georgKey);
     const response = await openai.createCompletion({
         model: "gpt-3.5-turbo",
         query,
@@ -43,6 +39,8 @@ module.exports = {
     async execute(interaction) {
         const { member, options } = interaction;
         const query = options.getString("query");
+
+        console.log(georgKey);
 
         const GPTEmbed = new EmbedBuilder()
 
