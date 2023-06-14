@@ -6,25 +6,22 @@ const georgAPI = georgConfig.georgGPT;
 const configuration = new Configuration({
     apiKey: georgAPI,
   });
+
 const openai = new OpenAIApi(configuration);
 
-async function promptGeorg (query) {
-    const completion = await openai.createCompletion({
+async function ask(query) {
+    const response = await openai.createCompletion({
         model: "gpt-3.5-turbo",
         query,
-        temperature: 0.7,
+        temperature: 2,
         max_tokens: 256,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
     });
-    try {
-        const answer = response.data.choices[0].text;
-        console.log(answer);
-        // return answer;
-    } catch (err) {
-        console.log(err);
-    }
+    const answer = response.data.choices[0].text;
+    console.log(answer);
+    return answer;
 };
 
 module.exports = {
