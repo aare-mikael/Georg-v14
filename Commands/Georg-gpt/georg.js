@@ -38,24 +38,25 @@ module.exports = {
         ),
     async execute(interaction) {
         const { member, options } = interaction;
-        const query = options.getString("query");
+        let query = options.getString("query");
+        console.log(query);
 
         console.log(georgKey);
 
-        const GPTEmbed = new EmbedBuilder()
+        // const GPTEmbed = new EmbedBuilder()
 
-        GPTEmbed
-            .setColor("Red")
-            .setDescription("loading..."),
-        interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
+        // GPTEmbed
+        //     .setColor("Red")
+        //     .setDescription("loading..."),
+        // interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
-        // Runs the actual prompt function
-        const result = await promptGeorg(query);
+        // // Runs the actual prompt function
+        // const result = await promptGeorg(query);
 
-        GPTEmbed
-            .setColor("Purple")
-            .setDescription(result)
-            .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
-        return interaction.editReply({ embeds: [GPTEmbed] });
+        // GPTEmbed
+        //     .setColor("Purple")
+        //     .setDescription(result)
+        //     .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
+        // return interaction.editReply({ embeds: [GPTEmbed] });
     }
 };
