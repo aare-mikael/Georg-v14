@@ -15,6 +15,7 @@
         "@distube/spotify": "^1.5.1",
         "add-dependencies": "^1.1.0",
         "ascii-table": "^0.0.9",
+        "axios": "^1.4.0",
         "colors": "^1.4.0",
         "cpu-stat": "^2.0.1",
         "discord.js": "^14.11.0",
