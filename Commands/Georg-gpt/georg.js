@@ -10,21 +10,14 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
-  try {
-    const getResponse = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: 'testcontent' }],
-      prompt: 'Say this is a test',
-      temperature: 0.7,
-      max_tokens: 500,
-    });
-    let answer = response.data.choices[0].message.content;
-    console.log(answer);
-    console.log(response);
-    return answer;
-  } catch (error) {
-    console.log(error);
-  }
+  const completion = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages: [
+      { role: 'system', content: 'You are a helpful assistant.' },
+      { role: 'user', content: query },
+    ],
+  });
+  return completion.data.choices[0].message.content;
 }
 
 module.exports = {
@@ -47,14 +40,15 @@ module.exports = {
       interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
     // Runs the actual prompt function
-    await promptGeorg(query).then((result) => {
-      GPTEmbed.setColor('Purple')
-        .setDescription('GeorgGPT says: \n' + result)
-        .setFooter({
-          text: `Requested by ${member.user.tag}`,
-          iconURL: member.displayAvatarURL(),
-        });
-      return interaction.editReply({ embeds: [GPTEmbed] });
-    });
+
+    let res = await promptGeorg(query);
+
+    await GPTEmbed.setColor('Purple')
+      .setDescription('GeorgGPT says: \n' + res)
+      .setFooter({
+        text: `Requested by ${member.user.tag}`,
+        iconURL: member.displayAvatarURL(),
+      });
+    return interaction.editReply({ embeds: [GPTEmbed] });
   },
 };
