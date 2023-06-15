@@ -29,7 +29,7 @@ async function promptGeorg(query) {
         console.log(answer);
         return answer;
     } catch (error) {
-        console.log("error happened");
+        console.error(error);
     }
 };
 
