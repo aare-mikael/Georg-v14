@@ -16,6 +16,7 @@ async function promptGeorg(query) {
         model: "gpt-3.5-turbo",
         max_tokens: 100,
         temperature: 0,
+        object: "chat.completion",
     };
 
     axiosClient
