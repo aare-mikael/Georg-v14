@@ -24,7 +24,7 @@ async function promptGeorg(query) {
             frequency_penalty: 0,
             presence_penalty: 0,
         });
-        let answer = response.data.choices[0].message.content;
+        let answer = response.data.choices[0].message.content.toString();
         return answer;
     } catch (error) {
         console.error(error);
@@ -56,7 +56,7 @@ module.exports = {
 
         GPTEmbed
             .setColor("Purple")
-            .setDescription(result)
+            .setDescription(result.toString())
             .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
         return interaction.editReply({ embeds: [GPTEmbed] });
     }
