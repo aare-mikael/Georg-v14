@@ -61,7 +61,7 @@ module.exports = {
 
         GPTEmbed
             .setColor("Purple")
-            .setDescription("" + result)
+            .setDescription("GeorgGPT says: \n" + result)
             .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
         return interaction.editReply({ embeds: [GPTEmbed] });
     }
