@@ -12,7 +12,7 @@ const openai = new OpenAIApi(configuration);
 async function promptGeorg(query) {
     try {
         const response = await openai.createChatCompletion({
-            model: 'text-davinci-003',
+            model: 'gpt-3.5-turbo',
             // messages: [{ query }],
             messages: [{role: 'user', content: 'testcontent'}],
             prompt: "Say this is a test",
@@ -46,8 +46,8 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        const { member, options } = interaction;
-        let query = options.getString("query");
+        const { member, option } = interaction;
+        let query = option.getString("query");
 
         const GPTEmbed = new EmbedBuilder()
 
