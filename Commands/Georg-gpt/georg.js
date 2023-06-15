@@ -28,6 +28,7 @@ async function promptGeorg(query) {
         });
 
         console.log(response);
+        return;
 
         console.log(response.data.choices[0].message.content);
         // let answer = response.data.choices[0].message.content.toString();
