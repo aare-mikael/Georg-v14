@@ -3,32 +3,32 @@ const { Configuration, OpenAIApi } = require("openai");
 const axios = require("axios");
 const georgKey = process.env.georgGPT;
 
-const axiosClient = axios.create({
-    headers: {
-        Authorization: "Bearer " + georgKey,
-    },
-});
+const configuration = new Configuration({
+    apiKey: georgKey,
+  });
+
+const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
-    
-    const params = {
-        prompt: "Say this is a test",
-        model: "gpt-3.5-turbo",
-        max_tokens: 100,
-        temperature: 0,
-        object: "chat.completion",
-    };
-
-    axiosClient
-        .post("https://api.openai.com/v1/completions", params)
-        .then((result) => {
-            console.log(result.data.choices[0].text);
-        }).catch((err) => {
-            console.log(err);
+    try {
+        const response = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            query,
+            usage: {
+                prompt_tokens: 100,
+                completion_tokens: 800,
+                total_tokens: 1000,
+            },
+            temperature: 1,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
         });
-
-    let result = response.data.choices[0].text;
-    return result;
+        let answer = response.data.choices[0].text;
+        return answer;
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 module.exports = {
