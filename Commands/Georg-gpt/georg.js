@@ -47,16 +47,14 @@ module.exports = {
       interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
     // Runs the actual prompt function
-    let result = await promptGeorg(query).then((result) => {
-      console.log('result:', result);
+    await promptGeorg(query).then((result) => {
+      GPTEmbed.setColor('Purple')
+        .setDescription('GeorgGPT says: \n' + result)
+        .setFooter({
+          text: `Requested by ${member.user.tag}`,
+          iconURL: member.displayAvatarURL(),
+        });
+      return interaction.editReply({ embeds: [GPTEmbed] });
     });
-
-    GPTEmbed.setColor('Purple')
-      .setDescription('GeorgGPT says: \n' + result)
-      .setFooter({
-        text: `Requested by ${member.user.tag}`,
-        iconURL: member.displayAvatarURL(),
-      });
-    return interaction.editReply({ embeds: [GPTEmbed] });
   },
 };
