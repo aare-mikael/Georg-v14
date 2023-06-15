@@ -48,6 +48,7 @@ module.exports = {
 
         // Runs the actual prompt function
         let result = await promptGeorg(query);
+        console.log(result)
 
         GPTEmbed
             .setColor("Purple")
