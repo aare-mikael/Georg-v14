@@ -26,13 +26,16 @@ async function promptGeorg(query) {
             // frequency_penalty: 0,
             // presence_penalty: 0,
         });
+
+        console.log(response);
+
         console.log(response.data.choices[0].message.content);
         // let answer = response.data.choices[0].message.content.toString();
         let answer = response.data.choices[0].message.content;
         console.log(answer);
         return answer;
     } catch (error) {
-        console.error(error);
+        // console.error(error);
     }
 };
 
@@ -46,7 +49,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        const { member, options } = interaction;
+        const { member, options } = interaction ;
         let query = options.getString("query");
 
         const GPTEmbed = new EmbedBuilder()
