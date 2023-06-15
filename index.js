@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 
 const dotenv = require('dotenv').config()
-const token = process.env.token
+const token = process.env.TOKEN
 
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
@@ -34,7 +34,7 @@ client.config = require("./config.json");
 
 module.exports = client;
 
-client.login(token).then(() => {
+client.login(TOKEN).then(() => {
   loadEvents(client);
   loadCommands(client);
 });
