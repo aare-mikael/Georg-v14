@@ -14,10 +14,10 @@ async function promptGeorg(query) {
     model: 'gpt-3.5-turbo',
     messages: [
       { role: 'system', content: 'You are a helpful assistant.' },
-      { role: 'user', content: 'Hello world' },
+      { role: 'user', content: query },
     ],
   });
-  return completion.data.choices[0].message;
+  return completion.data.choices[0].message.content;
 }
 
 module.exports = {
