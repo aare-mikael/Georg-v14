@@ -11,7 +11,7 @@ const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
   try {
-    const response = await openai.createChatCompletion({
+    const getResponse = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: 'testcontent' }],
       prompt: 'Say this is a test',
@@ -23,7 +23,7 @@ async function promptGeorg(query) {
     console.log(response);
     return answer;
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
   }
 }
 
