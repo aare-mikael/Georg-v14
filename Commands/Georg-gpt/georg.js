@@ -39,7 +39,7 @@ module.exports = {
     async execute(interaction) {
         const { member, options } = interaction;
         let query = options.getString("query");
-        console.log(query);
+        console.log(typeof query);
 
         console.log(georgKey);
 
