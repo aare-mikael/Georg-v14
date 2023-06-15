@@ -43,12 +43,12 @@ module.exports = {
 
         console.log(georgKey);
 
-        // const GPTEmbed = new EmbedBuilder()
+        const GPTEmbed = new EmbedBuilder()
 
-        // GPTEmbed
-        //     .setColor("Red")
-        //     .setDescription("loading..."),
-        // interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
+        GPTEmbed
+            .setColor("Red")
+            .setDescription("loading..."),
+        interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
         // // Runs the actual prompt function
         // const result = await promptGeorg(query);
