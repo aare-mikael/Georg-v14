@@ -47,8 +47,8 @@ module.exports = {
       interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
     // Runs the actual prompt function
-    let res = await promptGeorg(query).then((res) => {
-      console.log('result:', res);
+    let result = await promptGeorg(query).then((result) => {
+      console.log('result:', result);
     });
 
     GPTEmbed.setColor('Purple')
