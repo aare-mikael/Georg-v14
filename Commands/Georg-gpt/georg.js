@@ -40,14 +40,15 @@ module.exports = {
       interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
     // Runs the actual prompt function
-    await promptGeorg(query).then((result) => {
-      GPTEmbed.setColor('Purple')
-        .setDescription('GeorgGPT says: \n' + result)
-        .setFooter({
-          text: `Requested by ${member.user.tag}`,
-          iconURL: member.displayAvatarURL(),
-        });
-      return interaction.editReply({ embeds: [GPTEmbed] });
-    });
+
+    let res = await promptGeorg(query);
+
+    await GPTEmbed.setColor('Purple')
+      .setDescription('GeorgGPT says: \n' + res)
+      .setFooter({
+        text: `Requested by ${member.user.tag}`,
+        iconURL: member.displayAvatarURL(),
+      });
+    return interaction.editReply({ embeds: [GPTEmbed] });
   },
 };
