@@ -47,7 +47,7 @@ module.exports = {
       interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
     // Runs the actual prompt function
-    let res = await promptGeorg(query).then((red) => {
+    let res = await promptGeorg(query).then((res) => {
       console.log('result:', res);
     });
 
