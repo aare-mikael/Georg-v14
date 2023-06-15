@@ -39,9 +39,6 @@ module.exports = {
     async execute(interaction) {
         const { member, options } = interaction;
         let query = options.getString("query");
-        console.log(typeof query);
-
-        console.log(georgKey);
 
         const GPTEmbed = new EmbedBuilder()
 
@@ -50,8 +47,8 @@ module.exports = {
             .setDescription("loading..."),
         interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
-        // // Runs the actual prompt function
-        // const result = await promptGeorg(query);
+        // Runs the actual prompt function
+        const result = await promptGeorg(query);
 
         // GPTEmbed
         //     .setColor("Purple")
