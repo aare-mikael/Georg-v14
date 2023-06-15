@@ -11,10 +11,10 @@ const openai = new OpenAIApi(configuration);
 
 async function promptGeorg(query) {
     try {
-        const response = await openai.createChatCompletion({
+        const getResponse = await openai.createChatCompletion({
             model: 'gpt-3.5-turbo',
             // messages: [{ query }],
-            messages: [{role: 'user', content: 'testcontent'}],
+            // messages: [{role: 'user', content: 'testcontent'}],
             prompt: "Say this is a test",
             // usage: {
             //     prompt_tokens: 100,
@@ -27,16 +27,16 @@ async function promptGeorg(query) {
             // presence_penalty: 0,
         });
 
-        console.log(response);
-        return;
+        console.log(getResponse);
 
-        console.log(response.data.choices[0].message.content);
+        console.log(response.data.choices[0]);
+        console.log(response.data.choices[0].message.content.toString());
         // let answer = response.data.choices[0].message.content.toString();
         let answer = response.data.choices[0].message.content;
         console.log(answer);
         return answer;
     } catch (error) {
-        // console.error(error);
+        console.error(error);
     }
 };
 
