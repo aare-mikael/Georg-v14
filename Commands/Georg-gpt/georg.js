@@ -13,30 +13,15 @@ async function promptGeorg(query) {
     try {
         const response = await openai.createChatCompletion({
             model: 'gpt-3.5-turbo',
-            // messages: [{ query }],
             messages: [{role: 'user', content: 'testcontent'}],
             prompt: "Say this is a test",
-            // usage: {
-            //     prompt_tokens: 100,
-            //     completion_tokens: 800,
-            //     total_tokens: 1000,
-            // },
-            // temperature: 1,
-            // top_p: 1,
-            // frequency_penalty: 0,
-            // presence_penalty: 0,
+            temperature: 0.7,
+            max_tokens: 500
         });
-
-        console.log(response);
-        return;
-
-        console.log(response.data.choices[0].message.content);
-        // let answer = response.data.choices[0].message.content.toString();
         let answer = response.data.choices[0].message.content;
         console.log(answer);
         return answer;
     } catch (error) {
-        // console.error(error);
     }
 };
 
