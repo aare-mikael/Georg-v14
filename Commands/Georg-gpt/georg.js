@@ -17,12 +17,12 @@ async function promptGeorg(query) {
             completion_tokens: 800,
             total_tokens: 1000,
         },
-        temperature: 2,
+        temperature: 1,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
     });
-    const answer = response.data.choices[0].text;
+    let answer = response.data.choices[0].text;
     return answer;
 };
 
@@ -49,10 +49,10 @@ module.exports = {
         // Runs the actual prompt function
         const result = await promptGeorg(query);
 
-        // GPTEmbed
-        //     .setColor("Purple")
-        //     .setDescription(result)
-        //     .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
-        // return interaction.editReply({ embeds: [GPTEmbed] });
+        GPTEmbed
+            .setColor("Purple")
+            .setDescription(result)
+            .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
+        return interaction.editReply({ embeds: [GPTEmbed] });
     }
 };
