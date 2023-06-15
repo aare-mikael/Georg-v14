@@ -37,7 +37,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        const { member, options } = interaction ;
+        const { member, options } = interaction;
         let query = options.getString("query");
 
         const GPTEmbed = new EmbedBuilder()
@@ -49,7 +49,7 @@ module.exports = {
 
         // Runs the actual prompt function
         let result = await promptGeorg(query);
-        console.log(result)
+        console.log("Result: " + result)
 
         GPTEmbed
             .setColor("Purple")
