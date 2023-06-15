@@ -22,8 +22,8 @@ async function promptGeorg(query) {
     console.log(answer);
     console.log(response);
     return answer;
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    throw new Error('Error occured:', { cause: err });
   }
 }
 
