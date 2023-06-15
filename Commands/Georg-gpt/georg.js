@@ -61,7 +61,7 @@ module.exports = {
 
         GPTEmbed
             .setColor("Purple")
-            .setDescription("The result: \n " + result)
+            .setDescription("" + result)
             .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
         return interaction.editReply({ embeds: [GPTEmbed] });
     }
