@@ -5,7 +5,7 @@ const georgKey = process.env.georgGPT;
 
 const axiosClient = axios.create({
     headers: {
-        Authorization: "Bearer " + apiKey,
+        Authorization: "Bearer " + georgKey,
     },
 });
 
