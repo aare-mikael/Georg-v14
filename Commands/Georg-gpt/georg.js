@@ -13,7 +13,9 @@ async function promptGeorg(query) {
     try {
         const response = await openai.createChatCompletion({
             model: 'gpt-3.5-turbo',
-            messages: [{ query }],
+            // messages: [{ query }],
+            messages: [{role: 'user', content: 'testcontent'}],
+            prompt: "Say this is a test",
             // usage: {
             //     prompt_tokens: 100,
             //     completion_tokens: 800,
