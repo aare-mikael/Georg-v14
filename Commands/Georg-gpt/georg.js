@@ -46,8 +46,8 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        const { member, option } = interaction;
-        let query = option.getString("query");
+        const { member, options } = interaction;
+        let query = options.getString("query");
 
         const GPTEmbed = new EmbedBuilder()
 
