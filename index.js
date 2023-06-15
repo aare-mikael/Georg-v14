@@ -34,7 +34,7 @@ client.config = require("./config.json");
 
 module.exports = client;
 
-client.login(token).then(() => {
+client.login(TOKEN).then(() => {
   loadEvents(client);
   loadCommands(client);
 });
