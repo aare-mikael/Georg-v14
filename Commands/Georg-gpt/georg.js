@@ -23,7 +23,6 @@ async function promptGeorg(query) {
         presence_penalty: 0,
     });
     const answer = response.data.choices[0].text;
-    console.log(answer);
     return answer;
 };
 
