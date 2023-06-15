@@ -52,11 +52,11 @@ module.exports = {
         interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
         // Runs the actual prompt function
-        const result = await promptGeorg(query);
+        let result = await promptGeorg(query);
 
         GPTEmbed
             .setColor("Purple")
-            .setDescription(result.toString())
+            .setDescription(result)
             .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() });
         return interaction.editReply({ embeds: [GPTEmbed] });
     }
