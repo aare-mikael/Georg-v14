@@ -12,22 +12,24 @@ const openai = new OpenAIApi(configuration);
 async function promptGeorg(query) {
     try {
         const response = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
+            model: 'gpt-3.5-turbo',
             messages: [{ query }],
-            usage: {
-                prompt_tokens: 100,
-                completion_tokens: 800,
-                total_tokens: 1000,
-            },
-            temperature: 1,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
+            // usage: {
+            //     prompt_tokens: 100,
+            //     completion_tokens: 800,
+            //     total_tokens: 1000,
+            // },
+            // temperature: 1,
+            // top_p: 1,
+            // frequency_penalty: 0,
+            // presence_penalty: 0,
         });
+        console.log(response.data.choices[0].message.content);
         let answer = response.data.choices[0].message.content.toString();
+        console.log(answer);
         return answer;
     } catch (error) {
-        console.error(error);
+        console.log("error happened");
     }
 };
 
@@ -48,7 +50,7 @@ module.exports = {
 
         GPTEmbed
             .setColor("Red")
-            .setDescription("loading..."),
+            .setDescription("Loading..."),
         interaction.reply({ embeds: [GPTEmbed], ephemeral: false });
 
         // Runs the actual prompt function
