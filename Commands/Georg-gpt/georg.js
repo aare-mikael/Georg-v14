@@ -20,6 +20,7 @@ async function promptGeorg(query) {
         });
         let answer = response.data.choices[0].message.content;
         console.log(answer);
+        console.log(response)
         return answer;
     } catch (error) {
     }
