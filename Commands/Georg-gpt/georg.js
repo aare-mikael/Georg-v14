@@ -13,7 +13,7 @@ async function promptGeorg(query) {
   const completion = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     messages: [
-      { role: 'system', content: 'You are a helpful assistant.' },
+      { role: 'system', content: "You are a close friend of mine, where we are comfortable with saying toxic things to each other and roasting each other, because we know it's all jokes" },
       { role: 'user', content: query },
     ],
   });
