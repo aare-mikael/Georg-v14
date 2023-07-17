@@ -22,7 +22,7 @@ module.exports = {
         embed
             .setColor("Red")
             .setDescription(`Loading...`)
-            .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() }),
+            // .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() }),
         interaction.reply({ embeds: [embed], ephemeral: false });
 
         if (!voiceChannel) {
