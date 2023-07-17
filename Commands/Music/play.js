@@ -19,7 +19,10 @@ module.exports = {
 
         const embed = new EmbedBuilder();
 
-        embed.setColor("Red").setDescription(`Loading...`);
+        embed
+            .setColor("Red")
+            .setDescription(`Loading...`)
+            .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() }),
         interaction.reply({ embeds: [embed], ephemeral: false });
 
         if (!voiceChannel) {
