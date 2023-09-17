@@ -41,7 +41,7 @@ module.exports = {
 
             channel.send({ embeds: [panelEmbed], components: menuComponents });
 
-            return interaction.reply({ content: "Succesfully sent your panel.", ephemeral: false });
+            return interaction.reply({ content: "successfully sent your panel.", ephemeral: false });
         } catch (err) {
             console.log(err);
         }

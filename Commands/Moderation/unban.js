@@ -20,7 +20,7 @@ module.exports = {
             await interaction.guild.members.unban(userId);
 
             const embed = new EmbedBuilder()
-                .setDescription(`Succesfully unbanned id ${userId} from the guild.`)
+                .setDescription(`successfully unbanned id ${userId} from the guild.`)
                 .setColor(0x5fb041)
                 .setTimestamp();
 

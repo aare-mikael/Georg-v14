@@ -25,7 +25,7 @@ module.exports = {
                     Channel: logChannel.id
                 });
 
-                embed.setDescription("Data was succesfully sent to the database.")
+                embed.setDescription("Data was successfully sent to the database.")
                     .setColor("Green")
                     .setTimestamp();
             } else if (data) {
@@ -35,7 +35,7 @@ module.exports = {
                     Channel: logChannel.id
                 });
 
-                embed.setDescription("Old data was succesfully replaced with the new data.")
+                embed.setDescription("Old data was successfully replaced with the new data.")
                     .setColor("Green")
                     .setTimestamp();
             }

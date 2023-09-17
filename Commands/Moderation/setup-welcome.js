@@ -43,7 +43,7 @@ module.exports = {
                     Role: roleId.id
                 });
             }
-            interaction.reply({content: 'Succesfully created a welcome message', ephemeral: false});
+            interaction.reply({content: 'successfully created a welcome message', ephemeral: false});
         })
     }
 }

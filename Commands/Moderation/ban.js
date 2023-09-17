@@ -33,7 +33,7 @@ module.exports = {
         await member.ban({ reason });
 
         const embed = new EmbedBuilder()
-            .setDescription(`Succesfully banned ${user} with reason: ${reason}`)
+            .setDescription(`successfully banned ${user} with reason: ${reason}`)
             .setColor(0x5fb041)
             .setTimestamp()
 

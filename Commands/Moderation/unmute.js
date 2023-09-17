@@ -22,7 +22,7 @@ module.exports = {
 
         const succesEmbed = new EmbedBuilder()
             .setTitle("**:white_check_mark: Unmuted**")
-            .setDescription(`Succesfully unmuted ${user}.`)
+            .setDescription(`successfully unmuted ${user}.`)
             .setColor(0x5fb041)
             .setTimestamp();
 

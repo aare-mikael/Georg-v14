@@ -33,7 +33,7 @@ module.exports = {
         await member.kick(reason);
 
         const embed = new EmbedBuilder()
-            .setDescription(`Succesfully kicked ${user} with reason: ${reason}`);
+            .setDescription(`successfully kicked ${user} with reason: ${reason}`);
 
         await interaction.reply({
             embeds: [embed],
