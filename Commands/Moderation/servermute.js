@@ -25,9 +25,9 @@ module.exports = {
         }
     
         const time = options.getString("time");
-        console.log(time);
+        console.log(typeof(time));
         const convertedTime = ms(time);
-        console.log(convertedTime);
+        console.log(typeof(convertedTime));
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
