@@ -27,7 +27,8 @@ module.exports = {
         const user = options.getUser("target");
         const member = guild.members.cache.get(user.id);
         const time = options.getString("time");
-        const convertedTime = ms(time);
+        const milliseconds = ms(time);
+        const convertedTime = milliseconds * 1000;
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
