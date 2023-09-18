@@ -55,7 +55,7 @@ module.exports = {
             // After the timeout, unmute all members in the voice channel
             setTimeout(async () => {
                 for (const memberToMute of membersToMute) {
-                    if (memberToMute.voice.mute) await memberToMute.voice.setMute(false, "Mute duration ended.");
+                    if (memberToMute[1].voice.muted) await memberToMute[1].voice.setMute(false, "Mute duration ended.");
                     }
                 }, convertedTime);            
 
