@@ -25,8 +25,9 @@ module.exports = {
         }
     
         const time = options.getString("time");
+        console.log(time);
         const convertedTime = ms(time);
-        // const convertedTime = milliseconds * 1000;
+        console.log(convertedTime);
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
@@ -49,14 +50,14 @@ module.exports = {
         try {
             const membersToMute = voiceChannel.members.filter(member => !member.user.bot);
             for (const memberToMute of membersToMute) {
-                if (!memberToMute[1].voice.muted) await memberToMute[1].voice.setMute(true, "Servermuted by " + member.user.tag + " for " + time + " because: " + reason);
+                if (!memberToMute[1].voice.muted) await memberToMute[1].voice.setMute(true);
             }
 
             // After the timeout, unmute all members in the voice channel
             setTimeout(async () => {
                 voiceChannel.members.filter(member => !member.user.bot).each(async (memberToCheck) => {
                     if (memberToCheck.voice.muted) {
-                        await memberToCheck.voice.setMute(false, "Mute duration ended.");
+                        await memberToCheck.voice.setMute(false);
                     }
                 });
             }, convertedTime);         
