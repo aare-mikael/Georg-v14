@@ -25,9 +25,7 @@ module.exports = {
         }
     
         const time = options.getString("time");
-        console.log(typeof(time));
         const convertedTime = ms(time);
-        console.log(typeof(convertedTime));
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
@@ -56,6 +54,8 @@ module.exports = {
             // After the timeout, unmute all members in the voice channel
             setTimeout(async () => {
                 voiceChannel.members.filter(member => !member.user.bot).each(async (memberToCheck) => {
+                    console.log(memberToCheck.user.username)
+                    console.log(memberToCheck.voice.muted)
                     if (memberToCheck.voice.muted) {
                         await memberToCheck.voice.setMute(false);
                     }
