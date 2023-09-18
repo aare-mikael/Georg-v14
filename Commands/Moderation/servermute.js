@@ -25,8 +25,8 @@ module.exports = {
         }
     
         const time = options.getString("time");
-        const milliseconds = ms(time);
-        const convertedTime = milliseconds * 1000;
+        const convertedTime = ms(time);
+        // const convertedTime = milliseconds * 1000;
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
@@ -54,7 +54,7 @@ module.exports = {
 
             // After the timeout, unmute all members in the voice channel
             setTimeout(async () => {
-                for (const memberToMute of membersToMute.values()) {
+                for (const memberToMute of membersToMute) {
                     if (memberToMute.voice.muted) await memberToMute.voice.setMute(false, "Mute duration ended.");
                     }
                 }, convertedTime);            
