@@ -8,7 +8,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addStringOption(option =>
             option.setName("time")
-                .setDescription("How long should the mute last?")
+                .setDescription("How long should the mute last? Write X seconds.")
                 .setRequired(true)
         )
         .addStringOption(option =>
@@ -25,7 +25,8 @@ module.exports = {
         }
     
         const time = options.getString("time");
-        const convertedTime = ms(time);
+        const milliseconds = ms(time);
+        const convertedTime = milliseconds * 1000;
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
@@ -37,7 +38,7 @@ module.exports = {
             .setDescription(`Successfully servermuted users.`)
             .addFields(
                 { name: "Reason", value: `${reason}`, inline: true },
-                { name: "Duration", value: `${time}`, inline: true }
+                { name: "Duration", value: `${convertedTime}` + " seconds", inline: true }
             )
             .setColor(0x5fb041)
             .setTimestamp();
