@@ -49,7 +49,7 @@ module.exports = {
         try {
             const membersToMute = voiceChannel.members.filter(member => !member.user.bot);
             for (const memberToMute of membersToMute) {
-                await memberToMute.voice.setMute(true);
+                if (!memberToMute[1].voice.muted) await memberToMute[1].voice.setMute(true, "Servermuted by " + member.user.tag + " for " + time + " because: " + reason);
             }
 
             // After the timeout, unmute all members in the voice channel
