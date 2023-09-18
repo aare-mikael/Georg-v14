@@ -54,11 +54,7 @@ module.exports = {
             // After the timeout, unmute all members in the voice channel
             setTimeout(async () => {
                 voiceChannel.members.filter(member => !member.user.bot).each(async (memberToCheck) => {
-                    console.log(memberToCheck.user.username)
-                    console.log(memberToCheck.voice.muted)
-                    if (memberToCheck.voice.muted) {
-                        await memberToCheck.voice.setMute(false);
-                    }
+                    await memberToCheck.voice.setMute(false);
                 });
             }, convertedTime);         
 
