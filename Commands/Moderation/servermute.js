@@ -35,7 +35,7 @@ module.exports = {
 
         const successEmbed = new EmbedBuilder()
             .setTitle("**:white_check_mark: Muted**")
-            .setDescription(`Successfully servermuted ${user}.`)
+            .setDescription(`Successfully servermuted users.`)
             .addFields(
                 { name: "Reason", value: `${reason}`, inline: true },
                 { name: "Duration", value: `${time}`, inline: true }
