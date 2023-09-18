@@ -49,6 +49,7 @@ module.exports = {
         try {
             const membersToMute = voiceChannel.members.filter(member => !member.user.bot);
             for (const memberToMute of membersToMute) {
+                if (memberToMute[1].user.id === interaction.member.user.id) continue;
                 if (!memberToMute[1].voice.muted) await memberToMute[1].voice.setMute(true);
             }
 
