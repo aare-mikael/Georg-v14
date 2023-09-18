@@ -5,7 +5,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("serverMute")
         .setDescription("Server mute every member in your current voice channel.")
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addStringOption(option =>
             option.setName("time")
                 .setDescription("How long should the mute last?")
@@ -52,12 +52,12 @@ module.exports = {
                 await memberToMute.voice.setMute(true);
             }
 
-        // After the timeout, unmute all members in the voice channel
-        setTimeout(async () => {
-            for (const member of membersToMute.values()) {
-                if (member.voice.muted) await member.voice.setMute(false, "Mute duration ended.");
-                }
-            }, convertedTime);            
+            // After the timeout, unmute all members in the voice channel
+            setTimeout(async () => {
+                for (const member of membersToMute.values()) {
+                    if (member.voice.muted) await member.voice.setMute(false, "Mute duration ended.");
+                    }
+                }, convertedTime);            
 
             interaction.reply({ embeds: [succesEmbed], ephemeral: false });
         } catch (err) {
