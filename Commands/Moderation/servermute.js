@@ -38,7 +38,7 @@ module.exports = {
             .setDescription(`Successfully servermuted users.`)
             .addFields(
                 { name: "Reason", value: `${reason}`, inline: true },
-                { name: "Duration", value: `${convertedTime}` + " seconds", inline: true }
+                { name: "Duration", value: `${milliseconds}` + " seconds", inline: true }
             )
             .setColor(0x5fb041)
             .setTimestamp();
