@@ -54,12 +54,12 @@ module.exports = {
 
             // After the timeout, unmute all members in the voice channel
             setTimeout(async () => {
-                for (const member of membersToMute.values()) {
-                    if (member.voice.muted) await member.voice.setMute(false, "Mute duration ended.");
+                for (const memberToMute of membersToMute.values()) {
+                    if (memberToMute.voice.muted) await memberToMute.voice.setMute(false, "Mute duration ended.");
                     }
                 }, convertedTime);            
 
-            interaction.reply({ embeds: [succesEmbed], ephemeral: false });
+            interaction.reply({ embeds: [successEmbed], ephemeral: false });
         } catch (err) {
             console.log(err);
         }
