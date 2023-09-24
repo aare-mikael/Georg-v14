@@ -9,44 +9,17 @@ module.exports = {
             option.setName("colour")
                 .setDescription("Choose a colour for the embed.")
                 .setRequired(false)
-                .addChoice("Aqua", "Aqua")
-                .addChoice("Azure", "Azure")
-                .addChoice("Beige", "Beige")
-                .addChoice("Black", "Black")
-                .addChoice("Blue", "Blue")
-                .addChoice("Brown", "Brown")
-                .addChoice("Chocolate", "Chocolate")
-                .addChoice("Coral", "Coral")
-                .addChoice("Crimson", "Crimson")
-                .addChoice("Cyan", "Cyan")
-                .addChoice("Fuchsia", "Fuchsia")
-                .addChoice("Gold", "Gold")
-                .addChoice("Green", "Green")
-                .addChoice("Grey", "Grey")
-                .addChoice("Hot Pink", "Hot Pink")
-                .addChoice("Indigo", "Indigo")
-                .addChoice("Khaki", "Khaki")
-                .addChoice("Lavender", "Lavender")
-                .addChoice("Lemon", "Lemon")
-                .addChoice("Lime", "Lime")
-                .addChoice("Magenta", "Magenta")
-                .addChoice("Maroon", "Maroon")
-                .addChoice("Mint", "Mint")
-                .addChoice("Navy", "Navy")
-                .addChoice("Olive", "Olive")
-                .addChoice("Orange", "Orange")
-                .addChoice("Pink", "Pink")
-                .addChoice("Plum", "Plum")
-                .addChoice("Purple", "Purple")
-                .addChoice("Red", "Red")
-                .addChoice("Salmon", "Salmon")
-                .addChoice("Silver", "Silver")
-                .addChoice("Tan", "Tan")
-                .addChoice("Teal", "Teal")
-                .addChoice("Turquoise", "Turquoise")
-                .addChoice("Yellow", "Yellow")
-                .addChoice("Violet", "Violet")
-                .addChoice("White", "White")
+                .addChoices([
+                    ["Red", "Red"],
+                    ["Orange", "Orange"],
+                    ["Yellow", "Yellow"],
+                    ["Green", "Green"],
+                    ["Blue", "Blue"],
+                    ["Purple", "Purple"],
+                    ["Pink", "Pink"],
+                    ["Black", "Black"],
+                    ["White", "White"]
+                ])
         )                
             .addMentionableOption(option =>
             option.setName("tag")
