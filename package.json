@@ -21,7 +21,7 @@
         "discord.js": "^14.11.0",
         "distube": "^4.0.4",
         "dotenv": "^16.1.4",
-        "eslint": "^8.42.0",
+        "eslint": "^8.50.0",
         "formidable": "^2.1.1",
         "got": "^13.0.0",
         "libsodium-wrappers": "^0.7.11",
@@ -29,6 +29,7 @@
         "nodemon": "^2.0.22",
         "one-liner-joke": "^1.2.2",
         "openai": "^3.3.0",
+        "prettier": "^3.0.3",
         "superagent": "^8.0.9"
     }
 }
