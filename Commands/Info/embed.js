@@ -32,13 +32,12 @@ module.exports = {
                 .setRequired(false)
         ),
     async execute(interaction) {
-        const { options } = interaction;
+        const { options } = interaction;;
 
         const channel = options.getChannel("channel");
         const description = options.getString("description");
 
         const embed = new EmbedBuilder()
-            .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
             .setColor(options.getString("colour") || "Purple")
             .setDescription(description)
             .setFooter("Georg", interaction.client.user.displayAvatarURL({ dynamic: true }))            
