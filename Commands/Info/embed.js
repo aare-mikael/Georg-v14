@@ -9,17 +9,6 @@ module.exports = {
             option.setName("colour")
                 .setDescription("Choose a colour for the embed.")
                 .setRequired(false)
-                .addChoices([
-                    ["Red", "Red"],
-                    ["Orange", "Orange"],
-                    ["Yellow", "Yellow"],
-                    ["Green", "Green"],
-                    ["Blue", "Blue"],
-                    ["Purple", "Purple"],
-                    ["Pink", "Pink"],
-                    ["Black", "Black"],
-                    ["White", "White"]
-                ])
         )                
             .addMentionableOption(option =>
             option.setName("tag")
