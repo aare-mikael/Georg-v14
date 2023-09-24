@@ -21,11 +21,6 @@ module.exports = {
                 .setRequired(true)
                 .addChannelTypes(ChannelType.GuildText)
         )
-        .addStringOption(option =>   
-            option.setName("colour")
-                .setDescription("Choose a colour for the embed.")
-                .setRequired(false)
-        )                
         .addStringOption(option =>
             option.setName("tag")
                 .setDescription("Which user/group do you want to mention?")
@@ -38,7 +33,7 @@ module.exports = {
         const description = options.getString("description");
 
         const embed = new EmbedBuilder()
-            .setColor(options.getString("colour") || "Purple")
+            .setColor("Purple")
             .setDescription(description)
             .setFooter("Georg", interaction.client.user.displayAvatarURL({ dynamic: true }))            
             .setTimestamp()
