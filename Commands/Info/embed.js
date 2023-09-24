@@ -6,16 +6,6 @@ module.exports = {
         .setDescription("Write a message, Georg sends it in an embed to a text channel.")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
         .addStringOption(option =>
-            option.setName("colour")
-                .setDescription("Choose a colour for the embed.")
-                .setRequired(false)
-        )                
-            .addMentionableOption(option =>
-            option.setName("tag")
-                .setDescription("Which user/group do you want to mention?")
-                .setRequired(false)
-        )
-        .addStringOption(option =>
             option.setName("title")
                 .setDescription("Write the title.")
                 .setRequired(true)
@@ -30,6 +20,16 @@ module.exports = {
                 .setDescription("Which channel do you want to send the message to?")
                 .setRequired(true)
                 .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option =>   
+            option.setName("colour")
+                .setDescription("Choose a colour for the embed.")
+                .setRequired(false)
+        )                
+            .addMentionableOption(option =>
+            option.setName("tag")
+                .setDescription("Which user/group do you want to mention?")
+                .setRequired(false)
         ),
     async execute(interaction) {
         const { options } = interaction;
