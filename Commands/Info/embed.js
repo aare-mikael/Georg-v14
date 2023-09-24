@@ -27,7 +27,7 @@ module.exports = {
                 .setRequired(false)
         ),
     async execute(interaction) {
-        const { options } = interaction;;
+        const { options, member } = interaction;
 
         const channel = options.getChannel("channel");
         const description = options.getString("description");
@@ -35,7 +35,10 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor("Purple")
             .setDescription(description)
-            .setFooter("Georg", interaction.client.user.displayAvatarURL({ dynamic: true }))            
+            .setFooter({
+                text: `Written by ${member.user.tag}`,
+                iconURL: member.displayAvatarURL(),
+              })
             .setTimestamp()
             .setTitle(options.getString("title"));
 
