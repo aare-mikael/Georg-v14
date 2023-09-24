@@ -26,7 +26,7 @@ module.exports = {
                 .setDescription("Choose a colour for the embed.")
                 .setRequired(false)
         )                
-            .addMentionableOption(option =>
+        .addStringOption(option =>
             option.setName("tag")
                 .setDescription("Which user/group do you want to mention?")
                 .setRequired(false)
@@ -41,16 +41,6 @@ module.exports = {
             .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
             .setColor(options.getString("colour") || "Purple")
             .setDescription(description)
-            .setFields([{
-                    name: "Channel",
-                    value: channel.toString(),
-                    inline: true
-                }, {
-                    name: "Author",
-                    value: interaction.user.toString(),
-                    inline: true
-                }
-            ])
             .setFooter("Georg", interaction.client.user.displayAvatarURL({ dynamic: true }))            
             .setTimestamp()
             .setTitle(options.getString("title"));
