@@ -20,11 +20,6 @@ module.exports = {
                 .setDescription("Which channel do you want to send the message to?")
                 .setRequired(true)
                 .addChannelTypes(ChannelType.GuildText)
-        )
-        .addStringOption(option =>
-            option.setName("tag")
-                .setDescription("Which user/group do you want to mention?")
-                .setRequired(false)
         ),
     async execute(interaction) {
         const { options, member } = interaction;
@@ -44,7 +39,6 @@ module.exports = {
 
         try {
             const m = await channel.send({ embeds: [embed] });
-            const tag = await channel.send({ content: options.getMentionable("tag") });
             
             await interaction.reply({ content: "Embed was successfully sent to the channel.", ephemeral: false });
         } catch (err) {
