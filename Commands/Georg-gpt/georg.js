@@ -28,7 +28,17 @@ module.exports = {
         .setName('query')
         .setDescription('Write what you want to say to Georg.')
         .setRequired(true)
-    ),
+    )
+    .addStringOption((option) =>
+    option
+      .setName('behaviour')
+      .setDescription('Choose Georgs behaviour.')
+      .setChoices([
+        ['Georg', 'offensive'],
+        ['fake (friendly)', 'friendly'],
+      ])
+      .setRequired(true)
+  ),
   async execute(interaction) {
     const { member, options } = interaction;
     let query = options.getString('query');
