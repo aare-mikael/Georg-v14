@@ -26,11 +26,16 @@ module.exports = {
             .setTimestamp();
 
         try {
-            const membersToUnmute = voiceChannel.members.filter(member => !member.user.bot);
-            for (const memberToUnmute of membersToUnmute) {
-                if (memberToUnmute[1].user.id === interaction.member.user.id) continue;
-                if (memberToUnmute[1].voice.muted) await memberToUnmute[1].voice.setMute(false);
-            }       
+
+            voiceChannel.members.filter(member => !member.user.bot).each(async (memberToCheck) => {
+                await memberToCheck.voice.setMute(false);
+            });
+
+            // const membersToUnmute = voiceChannel.members.filter(member => !member.user.bot);
+            // for (const memberToUnmute of membersToUnmute) {
+            //     if (memberToUnmute[1].user.id === interaction.member.user.id) continue;
+            //     if (memberToUnmute[1].voice.muted) await memberToUnmute[1].voice.setMute(false);
+            // }
 
             interaction.reply({ embeds: [successEmbed], ephemeral: false });
         } catch (err) {
