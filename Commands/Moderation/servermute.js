@@ -7,11 +7,6 @@ module.exports = {
         .setDescription("Server mute every member in your current voice channel.")
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .addStringOption(option =>
-            option.setName("time")
-                .setDescription("How long should the mute last? Write X seconds.")
-                .setRequired(true)
-        )
-        .addStringOption(option =>
             option.setName("reason")
                 .setDescription("What is the reason of the mute?")
         ),
@@ -23,10 +18,7 @@ module.exports = {
         if (!voiceChannel) {
             return interaction.reply({ content: "You need to be in a voice channel to use this command.", ephemeral: true });
         }
-    
-        const time = options.getString("time");
-        const milliseconds = ms(time);
-        const convertedTime = milliseconds * 1000;
+
         const reason = options.getString("reason") || "No reason provided";
 
         const errEmbed = new EmbedBuilder()
@@ -38,27 +30,16 @@ module.exports = {
             .setDescription(`Successfully servermuted users.`)
             .addFields(
                 { name: "Reason", value: `${reason}`, inline: true },
-                { name: "Duration", value: `${milliseconds}` + " seconds", inline: true }
             )
             .setColor(0x5fb041)
             .setTimestamp();
-
-        if (!convertedTime)
-            return interaction.reply({ embeds: [errEmbed], ephemeral: false });
 
         try {
             const membersToMute = voiceChannel.members.filter(member => !member.user.bot);
             for (const memberToMute of membersToMute) {
                 if (memberToMute[1].user.id === interaction.member.user.id) continue;
                 if (!memberToMute[1].voice.muted) await memberToMute[1].voice.setMute(true);
-            }
-
-            // After the timeout, unmute all members in the voice channel
-            setTimeout(async () => {
-                voiceChannel.members.filter(member => !member.user.bot).each(async (memberToCheck) => {
-                    await memberToCheck.voice.setMute(false);
-                });
-            }, convertedTime);         
+            }       
 
             interaction.reply({ embeds: [successEmbed], ephemeral: false });
         } catch (err) {
