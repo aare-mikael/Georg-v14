@@ -29,7 +29,7 @@ module.exports = {
 
         try {
             const m = await channel.send({ embeds: [embed] });
-            m.react("🕢").then(() => m.react("🕗")).then(() => m.react("🕣")).then(() => m.react("🕘")).then(() => m.react("🕤")).then(() => m.react("🕙")).then(() => m.react("❌"));
+            m.react("🕢").then(() => m.react("🕗")).then(() => m.react("🕣")).then(() => m.react("🕘")).then(() => m.react("🕤")).then(() => m.react("🕙")).then(() => m.react("❌")).then(() => m.react("🏎️"));
             await interaction.reply({ content: "Poll was successfully sent to the channel.", ephemeral: false });
         } catch (err) {
             console.log(err);
