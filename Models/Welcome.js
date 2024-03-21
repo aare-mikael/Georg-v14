@@ -4,7 +4,7 @@ let welcomeSchema = new Schema({
     Guild: String,
     Channel: String,
     Msg: String,
-    Role: String
+    Role: String,
 });
 
 module.exports = model("Welcome", welcomeSchema);
