@@ -26,7 +26,7 @@ function loadCommands(client) {
 
   client.application.commands.set(commandsArray);
 
-  return console.log(table.toString(), "\n Loaded Commands");
+  return console.log(table.toString(), `\n Loaded ${commandsArray.length} commands`);
 }
 
 module.exports = { loadCommands };
