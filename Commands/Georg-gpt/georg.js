@@ -40,7 +40,11 @@ module.exports = {
 
     // Runs the actual prompt function
 
+    console.log("Awaiting query result")
+
     let res = await promptGeorg(query);
+
+    console.log(res);
 
     await GPTEmbed.setColor('Purple')
       .setDescription('GeorgGPT says: \n' + res)
