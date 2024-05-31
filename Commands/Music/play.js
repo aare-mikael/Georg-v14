@@ -10,14 +10,7 @@ module.exports = {
             option.setName("query")
                 .setDescription("Provide the name or url for the song.")
                 .setRequired(true)
-        )
-        .addStringOption(option =>
-        option.setName("volume")
-        .setDescription("Specify volume, 100 is max")
-        .setMinValue(0)
-        .setMaxValue(100)
-        .setRequired(false)
-    ),
+        ),
     async execute(interaction) {
         const { options, member, guild, channel } = interaction;
 
