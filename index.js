@@ -38,7 +38,7 @@ client.config = require("./config.json");
 module.exports = client;
 
 const openai = new OpenAI({
-  apiKey: georgApiKey
+  apiKey: georgApiKey,
 });
 
 const threadMap = {};
