@@ -4,7 +4,7 @@ const {
   Partials,
   Collection,
 } = require("discord.js");
-const { OpenAI } = require('openai');
+const OpenAI = require('openai');
 const georgApiKey = process.env.GEORGGPT_APIKEY;
 const georgAssistantId = process.env.GEORG_ASSISTANT_ID
 
