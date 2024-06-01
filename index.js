@@ -4,7 +4,7 @@ const {
   Partials,
   Collection,
 } = require("discord.js");
-const { OpenAI } = require('openai');
+const OpenAI = require('openai');
 const georgApiKey = process.env.GEORGGPT_APIKEY;
 const georgAssistantId = process.env.GEORG_ASSISTANT_ID
 
@@ -32,12 +32,12 @@ client.distube = new DisTube(client, {
   plugins: [new SpotifyPlugin()]
 });
 
+const openai = new OpenAI({ apiKey: georgApiKey });
+
 client.commands = new Collection();
 client.config = require("./config.json");
 
 module.exports = client;
-
-const openai = new OpenAI({ key: georgApiKey });
 
 const threadMap = {};
 
