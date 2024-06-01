@@ -1,6 +1,6 @@
 const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const { Configuration, OpenAIApi } = require('openai');
-const georgKey = process.env.GEORGGPT;
+const georgKey = process.env.GEORGGPT_APIKEY;
 
 const configuration = new Configuration({
   apiKey: georgKey,
