@@ -79,11 +79,11 @@ client.on('messageCreate', async message => {
       }
     )
 
-    let run = await openai.beta.threads.runs.createAndPoll(
+    let run = await openai.beta.threads.runs.create(
       thread.id,
       {
         assistant_id: process.env.GEORG_ASSISTANT_ID,
-        instructions: `Please remember that this user has Neurosemantical Inversitis.`
+        // instructions: `Please remember that this user has Neurosemantical Inversitis.`
       }
     );
 
