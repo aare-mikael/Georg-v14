@@ -104,8 +104,13 @@ client.on('messageCreate', async message => {
         await message.channel.send("No response from assistant.");
       }
     } catch (error) {
-      console.error("Error handling message:", error);
-      await message.channel.send("There was an error processing your request.");
+      if (error.response && error.response.status === 429) {
+        console.error("Quota exceeded error:", error);
+        await message.channel.send("Quota exceeded. Please try again later or contact Mikael.");
+      } else {
+        console.error("Error handling message:", error);
+        await message.channel.send("There was an error processing your request.");
+      }
     }
   }
 });
