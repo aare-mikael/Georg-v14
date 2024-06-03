@@ -95,6 +95,7 @@ client.on('messageCreate', async message => {
         console.log(`${message.role} > ${message.content[0].text.value}`);
       }
     } else {
+      console.log("Something happened with the run:")
       console.log(run.status)
     }
 
