@@ -64,7 +64,7 @@ client.on('messageCreate', async message => {
   if(message.author.bot) return;
   if (message.content.includes("georg") || message.content.includes("Georg")) {
     const discordThreadId = message.channel.id;
-    let openAiThreadId = threadMap[discordThreadId];
+    let openAiThreadId = getOpenAiThreadId[discordThreadId];
 
     if(!openAiThreadId) {
       const thread = await openai.beta.threads.create();
