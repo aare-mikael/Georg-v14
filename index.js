@@ -62,7 +62,7 @@ const statusCheckLoop = async (openAiThreadId, runId) => {
 
 client.on('messageCreate', async message => {
   if(message.author.bot) return;
-  if (message.content.toLowerCase.includes("georg")) {
+  if (message.content.includes("georg") || message.content.includes("Georg")) {
     const discordThreadId = message.channel.id;
     let openAiThreadId = threadMap[discordThreadId];
 
