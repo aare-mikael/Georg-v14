@@ -44,7 +44,7 @@ const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const terminalStates = ["cancelled", "failed", "completed", "expired"];
+const terminalStates = ["cancelled", "queued", "failed", "completed", "expired"];
 const statusCheckLoop = async (openAiThreadId, runId) => {
   const run = await openai.beta.threads.runs.retrieve(
     openAiThreadId,
@@ -95,8 +95,10 @@ client.on('messageCreate', async message => {
         console.log(`${message.role} > ${message.content[0].text.value}`);
       }
     } else {
+      const status = await statusCheckLoop(run.thread_id, run.id)
       console.log("Something happened with the run:")
       console.log(run.status)
+      console.log(status);
     }
 
   }
