@@ -79,7 +79,7 @@ client.on('messageCreate', async message => {
 
     const run = await openai.beta.threads.runs.create(
       openAiThreadId,
-      { assistant_id: georgAssistantId }
+      { assistant_id: process.env.GEORG_ASSISTANT_ID }
     );
 
     await statusCheckLoop(openAiThreadId, run.id);
@@ -87,7 +87,7 @@ client.on('messageCreate', async message => {
     const messages = await openai.beta.threads.messages.list(openAiThreadId);
     const response = messages.data[0].content[0].text.value;
 
-    console.log(response);
+    console.log(messages);
 
     message.channel.send(response);
   }
