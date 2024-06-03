@@ -27,6 +27,8 @@ client.distube = new DisTube(client, {
 client.commands = new Collection();
 client.config = require("./config.json");
 
+const channelThreads = new Map();
+
 module.exports = client;
 
 const sleep = (ms) => {
@@ -59,18 +61,26 @@ client.on('messageCreate', async message => {
   if (message.author.bot || !message.content || message.content === '') return;
   if (message.content.toLowerCase().includes("georg")) {
     try {
-      console.log("Creating thread with OpenAI...");
-      const thread = await openai.beta.threads.create();
-      console.log("Thread created with ID:", thread.id);
+      let threadId = channelThreads.get(message.channel.id);
+      
+      if (!threadId) {
+        console.log("Creating new thread with OpenAI...");
+        const thread = await openai.beta.threads.create();
+        threadId = thread.id;
+        channelThreads.set(message.channel.id, threadId);
+        console.log("Thread created with ID:", thread.id);
+      } else {
+        console.log("Using existing thread with ID:", threadId);
+      }
 
       console.log("Adding message to thread...");
-      await openai.beta.threads.messages.create(thread.id, {
+      await openai.beta.threads.messages.create(threadId, {
         role: "user",
         content: message.content,
       });
 
       console.log("Starting assistant run with ID:", process.env.GEORG_ASSISTANT_ID);
-      let run = await openai.beta.threads.runs.create(thread.id, {
+      let run = await openai.beta.threads.runs.create(threadId, {
         assistant_id: process.env.GEORG_ASSISTANT_ID,
       });
 
