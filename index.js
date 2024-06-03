@@ -51,32 +51,40 @@ const addMessage = (threadId, content) => {
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.content || message.content === '') return;
-  if (message.content.includes("georg") || message.content.includes("Georg")) {
+  if (message.content.toLowerCase().includes("georg")) {
     try {
+      console.log("Creating thread with OpenAI...");
       const thread = await openai.beta.threads.create();
+      console.log("Thread created with ID:", thread.id);
 
+      console.log("Adding message to thread...");
       await openai.beta.threads.messages.create(thread.id, {
         role: "user",
         content: message.content,
       });
 
+      console.log("Starting assistant run...");
       let run = await openai.beta.threads.runs.create(thread.id, {
         assistant_id: process.env.GEORG_ASSISTANT_ID,
       });
 
+      console.log("Checking run status...");
       if (run.status !== "completed") {
         await statusCheckLoop(run.thread_id, run.id);
-        console.log("Something happened with the run:");
-        console.log(run.status);
+        console.log("Run status:", run.status);
         await sleep(1000);
         await statusCheckLoop(run.thread_id, run.id);
       }
 
+      console.log("Fetching messages from thread...");
       const messages = await openai.beta.threads.messages.list(run.thread_id);
+      console.log("Messages received:", messages);
+
       const assistantReply = messages.data.find(msg => msg.role === "assistant");
       if (assistantReply && assistantReply.content && assistantReply.content.length > 0) {
         await message.channel.send(assistantReply.content[0].text.value);
       } else {
+        console.log("No response from assistant.");
         await message.channel.send("No response from assistant.");
       }
     } catch (error) {
