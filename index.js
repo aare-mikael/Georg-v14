@@ -5,10 +5,9 @@ const { SpotifyPlugin } = require("@distube/spotify");
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
 const token  = process.env.TOKEN
-const georgApiKey = process.env.GEORGGPT_APIKEY;
 const georgAssistantId = process.env.GEORG_ASSISTANT_ID
 
-const openai = new OpenAI({ apiKey: georgApiKey });
+const openai = new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
 
 const client = new Client({
   intents: [Object.keys(GatewayIntentBits)],
