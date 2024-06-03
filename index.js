@@ -54,7 +54,7 @@ const addMessage = (threadId, content) => {
 
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.content || message.content === '') return;
-  if (message.content.toLowerCase().includes("georg")) {
+  if (message.content.toLowerCase().includes("georg") || message.mentions.has(client.application.id)) {
     try {
       let threadId = channelThreads.get(message.channel.id);
       
