@@ -74,7 +74,7 @@ client.on('messageCreate', async message => {
 
       const messages = await openai.beta.threads.messages.list(run.thread_id);
       const assistantReply = messages.data.find(msg => msg.role === "assistant");
-      if (assistantReply) {
+      if (assistantReply && assistantReply.content && assistantReply.content.length > 0) {
         await message.channel.send(assistantReply.content[0].text.value);
       } else {
         await message.channel.send("No response from assistant.");
