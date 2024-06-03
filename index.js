@@ -72,7 +72,7 @@ client.on('messageCreate', async message => {
       addThreadToMap(discordThreadId, openAiThreadId);
     }
 
-    await openai.beta.threads.messages,create(
+    await openai.beta.threads.messages.create(
       openAiThreadId,
       { role: "user", content: message.content }
     )
