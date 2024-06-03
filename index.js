@@ -99,6 +99,8 @@ client.on('messageCreate', async message => {
         await message.channel.send("There was an error processing your request.");
       }
     }
+  } else {
+    return;
   }
 });
 
