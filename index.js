@@ -55,7 +55,7 @@ client.on('messageCreate', async message => {
     try {
       const thread = await openai.beta.threads.create();
 
-      await openai.beta.threads.messages.create(thread.id, {
+      await openai.beta.threads.messages.create_and_poll(thread.id, {
         role: "user",
         content: message.content,
       });
