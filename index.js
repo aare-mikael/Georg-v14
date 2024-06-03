@@ -108,7 +108,7 @@ client.on('messageCreate', async message => {
     let response = messages.data[0].content[0].text.value;
     response = response.substring(0, 1999) // Discord text limit
 
-    console.log(response);
+    console.log(messages.data);
 
     message.reply(response);
   }
