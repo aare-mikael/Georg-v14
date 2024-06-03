@@ -29,17 +29,6 @@ client.config = require("./config.json");
 
 module.exports = client;
 
-const threadMap = {};
-
-const getOpenAiThreadId = (discordThreadId) => {
-  // Temporary in-memory solution until I can scale up with a database like Firestore, Redis or DynamoDB.
-  return threadMap[discordThreadId];
-}
-
-const addThreadToMap = (discordThreadId, openAiThreadId) => {
-  threadMap[discordThreadId] = openAiThreadId;
-}
-
 const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -87,18 +76,18 @@ client.on('messageCreate', async message => {
       }
     );
 
-    if (run.status === "completed") {
+    if (run.status !== "completed") {
+      const status = await statusCheckLoop(run.thread_id, run.id)
+      console.log("Something happened with the run:")
+      console.log(run.status)
+      console.log(status);      
+    } else {
       const messages = await openai.beta.threads.messages.list(
         run.thread_id
       );
       for (const message of messages.data.reverse()) {
         console.log(`${message.role} > ${message.content[0].text.value}`);
       }
-    } else {
-      const status = await statusCheckLoop(run.thread_id, run.id)
-      console.log("Something happened with the run:")
-      console.log(run.status)
-      console.log(status);
     }
 
   }
