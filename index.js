@@ -6,9 +6,8 @@ const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
 require("dotenv").config()
 const token  = process.env.TOKEN
-const georgAssistantId = process.env.GEORG_ASSISTANT_ID
 
-const openai = new OpenAI({ apiKey: process.env["OPENAI_API_KEY"] });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const client = new Client({
   intents: [Object.keys(GatewayIntentBits)],
@@ -60,36 +59,58 @@ const statusCheckLoop = async (openAiThreadId, runId) => {
   return run.status;
 }
 
+const addMessage = (threadId, content) => {
+  return openai.beta.threads.messages.create(
+    threadId, 
+    { role: "user", content })
+}
+
 client.on('messageCreate', async message => {
-  if(message.author.bot) return;
+  if(message.author.bot || !message.content || message.content === '') return;
   if (message.content.includes("georg") || message.content.includes("Georg")) {
     const discordThreadId = message.channel.id;
     let openAiThreadId = getOpenAiThreadId[discordThreadId];
 
+    let messagesLoaded = false;
     if(!openAiThreadId) {
       const thread = await openai.beta.threads.create();
       openAiThreadId = thread.id;
       addThreadToMap(discordThreadId, openAiThreadId);
+      if(message.channel.isThread()) {
+        const starterMessage = await message.channel.fetchStarterMessage();
+        const otherMessagesRaw = await message.channel.messages.fetch();
+
+        const otherMessages = Array.from(otherMessagesRaw.values()).map(msg => msg.content).reverse();
+        const messages = [starterMessage.content, ...otherMessages].filter(msg => !!msg && msg !== '');
+
+        await Promise.all(messages.map(msg => addMessage(openAiThreadId, msg.content)));
+        messagesLoaded = true;
+      }
     }
 
-    await openai.beta.threads.messages.create(
-      openAiThreadId,
-      { role: "user", content: message.content }
-    )
+    if (!messagesLoaded) {
+      await addMessage(openAiThreadId, message.content);
+    }
+
+    // await openai.beta.threads.messages.create(
+    //   openAiThreadId,
+    //   { role: "user", content: message.content }
+    // )
 
     const run = await openai.beta.threads.runs.create(
       openAiThreadId,
-      { assistant_id: process.env["GEORG_ASSISTANT_ID"] }
+      { assistant_id: process.env.GEORG_ASSISTANT_ID }
     );
 
-    await statusCheckLoop(openAiThreadId, run.id);
+    const status = await statusCheckLoop(openAiThreadId, run.id);
 
     const messages = await openai.beta.threads.messages.list(openAiThreadId);
-    const response = messages.data[0].content[0].text.value;
+    let response = messages.data[0].content[0].text.value;
+    response = response.substring(0, 1999) // Discord text limit
 
-    console.log(messages);
+    console.log(response);
 
-    message.channel.send(response);
+    message.reply(response);
   }
 })
 
