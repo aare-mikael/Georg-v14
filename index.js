@@ -52,20 +52,6 @@ const addMessage = (threadId, content) => {
   return openai.beta.threads.messages.create(threadId, { role: "user", content });
 };
 
-const generateImage = async (prompt) => {
-  try {
-    const response = await openai.images.generate({
-      prompt: prompt,
-      n: 1,
-      size: "1024x1024"
-    });
-    return response.data[0].url;
-  } catch (error) {
-    console.error("Error generating image:", error);
-    throw error;
-  }
-};
-
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.content || message.content === '') return;
   if (message.content.toLowerCase().includes("georg")) {
@@ -102,19 +88,12 @@ client.on('messageCreate', async message => {
       if (assistantReply && assistantReply.content && assistantReply.content.length > 0) {
         const replyContent = assistantReply.content[0].text.value;
         await message.channel.send(replyContent);
-
-        // Check for image generation prompt
-        const imagePrompt = assistantReply.content[0].text.value.match(/generate an image of (.*)/i);
-        if (imagePrompt) {
-          const imageUrl = await generateImage(imagePrompt[1]);
-          await message.channel.send(imageUrl);
-        }
       } else {
-        await message.channel.send("No response from assistant.");
+        await message.channel.send("Georg is ignoring you.");
       }
     } catch (error) {
       if (error.response && error.response.status === 429) {
-        await message.channel.send("Quota exceeded. Please try again later or contact Mikael.");
+        await message.channel.send("You've used up the quota, meaning Mikaels bank account is empty. Please contact Mikael.");
       } else {
         console.error("Error handling message:", error);
         await message.channel.send("There was an error processing your request.");
