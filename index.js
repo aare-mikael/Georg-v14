@@ -73,11 +73,15 @@ client.on('messageCreate', async message => {
       }
 
       const messages = await openai.beta.threads.messages.list(run.thread_id);
-      for (const msg of messages.data.reverse()) {
-        await message.channel.send(`${msg.role} > ${msg.content[0].text.value}`);
+      const assistantReply = messages.data.find(msg => msg.role === "assistant");
+      if (assistantReply) {
+        await message.channel.send(assistantReply.content[0].text.value);
+      } else {
+        await message.channel.send("No response from assistant.");
       }
     } catch (error) {
       console.error("Error handling message:", error);
+      await message.channel.send("There was an error processing your request.");
     }
   }
 });
