@@ -40,21 +40,30 @@ const statusCheckLoop = async (openAiThreadId, runId) => {
   let run;
   do {
     run = await openai.beta.threads.runs.retrieve(openAiThreadId, runId);
-    console.log("Run status:", run.status);
     if (terminalStates.indexOf(run.status) < 0) {
       await sleep(1000);
     }
   } while (terminalStates.indexOf(run.status) < 0);
-
-  if (run.status === 'failed') {
-    console.error('Assistant run failed:', run);
-  }
 
   return run.status;
 };
 
 const addMessage = (threadId, content) => {
   return openai.beta.threads.messages.create(threadId, { role: "user", content });
+};
+
+const generateImage = async (prompt) => {
+  try {
+    const response = await openai.images.generate({
+      prompt: prompt,
+      n: 1,
+      size: "1024x1024"
+    });
+    return response.data[0].url;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    throw error;
+  }
 };
 
 client.on('messageCreate', async message => {
@@ -64,58 +73,47 @@ client.on('messageCreate', async message => {
       let threadId = channelThreads.get(message.channel.id);
       
       if (!threadId) {
-        console.log("Creating new thread with OpenAI...");
         const thread = await openai.beta.threads.create();
         threadId = thread.id;
         channelThreads.set(message.channel.id, threadId);
-        console.log("Thread created with ID:", thread.id);
-      } else {
-        console.log("Using existing thread with ID:", threadId);
       }
 
-      console.log("Adding message to thread...");
       await openai.beta.threads.messages.create(threadId, {
         role: "user",
         content: message.content,
       });
 
-      console.log("Starting assistant run with ID:", process.env.GEORG_ASSISTANT_ID);
       let run = await openai.beta.threads.runs.create(threadId, {
         assistant_id: process.env.GEORG_ASSISTANT_ID,
       });
 
-      console.log("Initial run status:", run.status);
-
       if (run.status !== "completed") {
         await statusCheckLoop(run.thread_id, run.id);
       }
-
-      console.log("Run completed with status:", run.status);
 
       if (run.status === 'failed') {
         await message.channel.send("The assistant run failed. Please try again later.");
         return;
       }
 
-      console.log("Fetching messages from thread...");
       const messages = await openai.beta.threads.messages.list(run.thread_id);
-      console.log("Messages received:", messages);
-
-      // Log all message roles and contents
-      messages.data.forEach(msg => {
-        console.log(`Role: ${msg.role}, Content: ${JSON.stringify(msg.content)}`);
-      });
 
       const assistantReply = messages.data.find(msg => msg.role === "assistant");
       if (assistantReply && assistantReply.content && assistantReply.content.length > 0) {
-        await message.channel.send(assistantReply.content[0].text.value);
+        const replyContent = assistantReply.content[0].text.value;
+        await message.channel.send(replyContent);
+
+        // Check for image generation prompt
+        const imagePrompt = assistantReply.content[0].text.value.match(/generate an image of (.*)/i);
+        if (imagePrompt) {
+          const imageUrl = await generateImage(imagePrompt[1]);
+          await message.channel.send(imageUrl);
+        }
       } else {
-        console.log("No response from assistant.");
         await message.channel.send("No response from assistant.");
       }
     } catch (error) {
       if (error.response && error.response.status === 429) {
-        console.error("Quota exceeded error:", error);
         await message.channel.send("Quota exceeded. Please try again later or contact Mikael.");
       } else {
         console.error("Error handling message:", error);
