@@ -4,6 +4,7 @@ const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
+require("dotenv").config()
 const token  = process.env.TOKEN
 const georgAssistantId = process.env.GEORG_ASSISTANT_ID
 
