@@ -36,6 +36,7 @@ const sleep = (ms) => {
 const terminalStates = ["cancelled", "queued", "failed", "completed", "expired"];
 const statusCheckLoop = async (openAiThreadId, runId) => {
   const run = await openai.beta.threads.runs.retrieve(openAiThreadId, runId);
+  console.log("Run status:", run.status);
 
   if (terminalStates.indexOf(run.status) < 0) {
     await sleep(1000);
@@ -63,16 +64,14 @@ client.on('messageCreate', async message => {
         content: message.content,
       });
 
-      console.log("Starting assistant run...");
+      console.log("Starting assistant run with ID:", process.env.GEORG_ASSISTANT_ID);
       let run = await openai.beta.threads.runs.create(thread.id, {
         assistant_id: process.env.GEORG_ASSISTANT_ID,
       });
 
-      console.log("Checking run status...");
+      console.log("Initial run status:", run.status);
+
       if (run.status !== "completed") {
-        await statusCheckLoop(run.thread_id, run.id);
-        console.log("Run status:", run.status);
-        await sleep(1000);
         await statusCheckLoop(run.thread_id, run.id);
       }
 
