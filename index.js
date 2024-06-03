@@ -1,21 +1,13 @@
-const {
-  Client,
-  GatewayIntentBits,
-  Partials,
-  Collection,
-} = require("discord.js");
-const OpenAI = require('openai');
-const georgApiKey = process.env.GEORGGPT_APIKEY;
-const georgAssistantId = process.env.GEORG_ASSISTANT_ID
-
-const dotenv = require('dotenv').config()
-const token  = process.env.TOKEN
-
+const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js");
+const { OpenAI } = require('openai');
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
-
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
+const token  = process.env.TOKEN
+const georgAssistantId = process.env.GEORG_ASSISTANT_ID
+
+const openai = new OpenAI({ apiKey: process.env["GEORGGPT_APIKEY"] });
 
 const client = new Client({
   intents: [Object.keys(GatewayIntentBits)],
@@ -31,8 +23,6 @@ client.distube = new DisTube(client, {
   leaveOnStop: true,
   plugins: [new SpotifyPlugin()]
 });
-
-const openai = new OpenAI({ apiKey: georgApiKey });
 
 client.commands = new Collection();
 client.config = require("./config.json");
