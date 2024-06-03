@@ -43,6 +43,11 @@ const statusCheckLoop = async (openAiThreadId, runId) => {
       await sleep(1000);
     }
   } while (terminalStates.indexOf(run.status) < 0);
+
+  if (run.status === 'failed') {
+    console.error('Assistant run failed:', run);
+  }
+
   return run.status;
 };
 
@@ -76,6 +81,11 @@ client.on('messageCreate', async message => {
       }
 
       console.log("Run completed with status:", run.status);
+
+      if (run.status === 'failed') {
+        await message.channel.send("The assistant run failed. Please try again later.");
+        return;
+      }
 
       console.log("Fetching messages from thread...");
       const messages = await openai.beta.threads.messages.list(run.thread_id);
