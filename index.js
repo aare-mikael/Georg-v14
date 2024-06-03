@@ -75,6 +75,8 @@ client.on('messageCreate', async message => {
         await statusCheckLoop(run.thread_id, run.id);
       }
 
+      console.log("Run completed with status:", run.status);
+
       console.log("Fetching messages from thread...");
       const messages = await openai.beta.threads.messages.list(run.thread_id);
       console.log("Messages received:", messages);
