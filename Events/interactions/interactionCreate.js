@@ -11,6 +11,7 @@ module.exports = {
       commandName,
     } = interaction;
 
+    //Finds commandName successfully!
     console.log("commandName:")
     console.log(commandName);
 
@@ -18,6 +19,8 @@ module.exports = {
 
     if (interaction.isChatInputCommand()) {
       const command = client.commands.get(commandName);
+
+      console.log(client)
 
       console.log("Command:")
       console.log(command)
