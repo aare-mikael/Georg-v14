@@ -1,7 +1,7 @@
 // TO DO: Spør Andreas om andre tips
 
 const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
-const { Configuration, OpenAIApi } = require("openai");
+const { OpenAI } = require('openai');
 const georgConfig = require("../../config.json");
 
 const openai = new OpenAI({
