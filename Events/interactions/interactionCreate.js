@@ -19,7 +19,7 @@ module.exports = {
       console.log(client.commands)
 
       console.log("Command:")
-      console.log(command)
+      console.log(commandName)
 
       // //moderation filter
       // if (command.moderatorOnly) {
