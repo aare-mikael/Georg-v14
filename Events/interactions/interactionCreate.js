@@ -11,10 +11,6 @@ module.exports = {
       commandName,
     } = interaction;
 
-    //Finds commandName successfully!
-    console.log("commandName:")
-    console.log(commandName);
-
     const errEmbed = new EmbedBuilder().setColor("Red");
 
     if (interaction.isChatInputCommand()) {
