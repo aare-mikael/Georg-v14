@@ -3,12 +3,10 @@
 const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
 const { Configuration, OpenAIApi } = require("openai");
 const georgConfig = require("../../config.json");
-const georgAPI = georgConfig.georgGPT;
 
-const georg = new Configuration({
-    apiKey: georgAPI,
-  });
-const openai = new OpenAIApi(georg);
+const openai = new OpenAI({
+    apiKey: process.env["OPENAI_API_KEY"],
+  })
 
 async function promptGeorg (query) {
     const completion = await openai.createCompletion({
