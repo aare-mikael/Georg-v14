@@ -16,30 +16,25 @@ module.exports = {
     if (interaction.isChatInputCommand()) {
       const command = client.commands.get(commandName);
 
-      console.log(client.commands)
+      //moderation filter
+      if (command.moderatorOnly) {
+        if (member.user.id !== "227520275132973056") {
+          errEmbed.setDescription(
+            "⛔ | Whoops! You don't have permissions for that!"
+          );
+          return interaction.reply({ embeds: [errEmbed], ephemeral: false });
+        }
+      }
 
-      console.log("Command:")
-      console.log(commandName)
-
-      // //moderation filter
-      // if (command.moderatorOnly) {
-      //   if (member.user.id !== "227520275132973056") {
-      //     errEmbed.setDescription(
-      //       "⛔ | Whoops! You don't have permissions for that!"
-      //     );
-      //     return interaction.reply({ embeds: [errEmbed], ephemeral: false });
-      //   }
-      // }
-
-      // //admin filter
-      // if (command.adminOnly) {
-      //   if (member.user.id !== "227520275132973056") {
-      //     errEmbed.setDescription(
-      //       "⛔ | Whoops! You don't have permissions for that!"
-      //     );
-      //     return interaction.reply({ embeds: [errEmbed], ephemeral: false });
-      //   }
-      // }
+      //admin filter
+      if (command.adminOnly) {
+        if (member.user.id !== "227520275132973056") {
+          errEmbed.setDescription(
+            "⛔ | Whoops! You don't have permissions for that!"
+          );
+          return interaction.reply({ embeds: [errEmbed], ephemeral: false });
+        }
+      }
 
       if (!command) {
         return interaction.reply({
