@@ -18,12 +18,12 @@ module.exports = {
         .addStringOption(option =>
             option.setName("option1")
                 .setDescription("Answer option nr 1")
-                .setRequired(false)
+                .setRequired(true)
         )
         .addStringOption(option =>
             option.setName("option2")
                 .setDescription("Answer option nr 2")
-                .setRequired(false)
+                .setRequired(true)
         )
         .addStringOption(option =>
             option.setName("option3")
@@ -72,21 +72,21 @@ module.exports = {
                 .addChannelTypes(ChannelType.GuildText)
         ),
     async execute(interaction) {
-        const { options } = interaction;
-        const title = options.getString("title");
-        const channel = options.getChannel("channel");
-        const description = options.getString("description");
-
-        const pollOptions = await options.data;
-        const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
-
-        const embed = new EmbedBuilder()
-            .setColor("Gold")
-            .setTitle(title)
-            .setDescription(description)
-            .setTimestamp();
-
         try {
+            const { options } = interaction;
+            const title = options.getString("title");
+            const channel = options.getChannel("channel");
+            const description = options.getString("description");
+    
+            const pollOptions = await options.data;
+            const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
+    
+            let embed = new EmbedBuilder()
+                .setColor("Gold")
+                .setTitle(title)
+                .setDescription(description)
+                .setTimestamp();
+
             for (let i = 0; i < pollOptions.length; i++) {
                 let emoji = emojis[i];
                 let option = options[i+1];
