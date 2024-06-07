@@ -97,7 +97,7 @@ module.exports = {
 
             for (let i = 0; i < pollOptions.length; i++) {
                 let emoji = emojis[i];
-                let pollOption = pollOptions[i+1];
+                let pollOption = pollOptions[i];
                 embed.addFields(
                     {
                         name: `Option ${emoji}: ${pollOption}`,
