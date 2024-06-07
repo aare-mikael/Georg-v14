@@ -78,7 +78,8 @@ module.exports = {
             const channel = options.getChannel("channel");
             const description = options.getString("description");
     
-            const pollOptions = await options.data;
+            const allOptions = await options.data;
+            const pollOptions = allOptions.pop();
             console.log(pollOptions)
             const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
     
