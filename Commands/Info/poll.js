@@ -77,8 +77,6 @@ module.exports = {
             const title = options.getString("title");
             const channel = options.getChannel("channel");
             const description = options.getString("description");
-    
-            const allOptions = await options.data;
 
             const pollOptions = [];
             for (let i = 1; i <= 10; i++) {
@@ -86,7 +84,6 @@ module.exports = {
                 if (option) pollOptions.push(option);
             }
 
-            console.log(pollOptions)
             const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
     
             let embed = new EmbedBuilder()
@@ -100,9 +97,13 @@ module.exports = {
                 let pollOption = pollOptions[i];
                 embed.addFields(
                     {
-                        name: `Option ${emoji}: ${pollOption}`,
+                        name: `--------------------------------`,
                         value: ' '
-                    }
+                    },
+                    {
+                        name: `Option ${emoji}:   ${pollOption}`,
+                        value: ' '
+                    },
                 )
             }
             const message = await channel.send({ embeds: [embed] });
