@@ -5,10 +5,16 @@ module.exports = {
         .setName("poll")
         .setDescription("Create a poll and send it to a certain channel")
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+        .addChannelOption(option =>
+            option.setName("channel")
+                .setDescription("Where do you want to send the poll?")
+                .setRequired(true)
+                .addChannelTypes(ChannelType.GuildText)
+        )
         .addStringOption(option =>
             option.setName("title")
                 .setDescription("Write the title.")
-                .setRequired(false)
+                .setRequired(true)
         )
         .addStringOption(option =>
             option.setName("description")
@@ -64,12 +70,6 @@ module.exports = {
             option.setName("option10")
                 .setDescription("Answer option nr 10")
                 .setRequired(false)
-        )
-        .addChannelOption(option =>
-            option.setName("channel")
-                .setDescription("Where do you want to send the poll?")
-                .setRequired(true)
-                .addChannelTypes(ChannelType.GuildText)
         ),
     async execute(interaction) {
         try {
