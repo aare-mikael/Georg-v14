@@ -79,7 +79,13 @@ module.exports = {
             const description = options.getString("description");
     
             const allOptions = await options.data;
-            const pollOptions = allOptions.pop();
+
+            const pollOptions = [];
+            for (let i = 1; i <= 10; i++) {
+                const option = options.getString(`option${i}`);
+                if (option) pollOptions.push(option);
+            }
+
             console.log(pollOptions)
             const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
     
