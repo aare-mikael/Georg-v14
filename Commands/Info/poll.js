@@ -4,13 +4,17 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("poll")
         .setDescription("Create a poll and send it to a certain channel")
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+        .addStringOption(option =>
+            option.setName("title")
+                .setDescription("Write the title.")
+                .setRequired(false)
+        )
         .addStringOption(option =>
             option.setName("description")
                 .setDescription("What is the poll about?")
                 .setRequired(true)
         )
-        // 7 options just to make sure you always have enough options as Discord does not allow for incremental increase in fields while you're writing the message.
         .addStringOption(option =>
             option.setName("option1")
                 .setDescription("Answer option nr 1")
@@ -46,6 +50,21 @@ module.exports = {
                 .setDescription("Answer option nr 7")
                 .setRequired(false)
         )
+        .addStringOption(option =>
+            option.setName("option8")
+                .setDescription("Answer option nr 8")
+                .setRequired(false)
+        )
+        .addStringOption(option =>
+            option.setName("option9")
+                .setDescription("Answer option nr 9")
+                .setRequired(false)
+        )
+        .addStringOption(option =>
+            option.setName("option10")
+                .setDescription("Answer option nr 10")
+                .setRequired(false)
+        )
         .addChannelOption(option =>
             option.setName("channel")
                 .setDescription("Where do you want to send the poll?")
@@ -54,30 +73,33 @@ module.exports = {
         ),
     async execute(interaction) {
         const { options } = interaction;
+        const title = options.getString("title");
         const channel = options.getChannel("channel");
         const description = options.getString("description");
-        const optionsArray = [];
 
-        for (let i = 1; i <= 7; i++) {
-            const option = options.getString(`option${i}`);
-            if (option) optionsArray.push(option);
-        }
-
-        if (optionsArray.length === 0) {
-            return interaction.reply({ content: "You need to provide at least one option.", ephemeral: true });
-        }
+        const pollOptions = await options.data;
+        const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
 
         const embed = new EmbedBuilder()
             .setColor("Gold")
+            .setTitle(title)
             .setDescription(description)
-            .addFields(optionsArray.map((opt, index) => ({ name: `Option ${index + 1}`, value: opt })))
             .setTimestamp();
 
         try {
+            for (let i = 0; i < pollOptions.length; i++) {
+                let emoji = emojis[i];
+                let option = options[i+1];
+                embed.addFields(
+                    {
+                        name: `Option ${emoji}: ${option.value}`,
+                        value: ' '
+                    }
+                )
+            }
             const message = await channel.send({ embeds: [embed] });
-            const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣'];
 
-            for (let i = 0; i < optionsArray.length; i++) {
+            for (let i = 0; i < pollOptions.length; i++) {
                 await message.react(emojis[i]);
             }
 
