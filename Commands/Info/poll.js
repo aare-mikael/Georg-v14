@@ -79,6 +79,7 @@ module.exports = {
             const description = options.getString("description");
     
             const pollOptions = await options.data;
+            console.log(pollOptions)
             const emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
     
             let embed = new EmbedBuilder()
