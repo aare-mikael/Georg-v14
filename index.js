@@ -1,5 +1,5 @@
 const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js");
-const { OpenAI } = require('openai');
+const OpenAI = require('openai');
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 const { loadEvents } = require("./Handlers/eventHandler");
