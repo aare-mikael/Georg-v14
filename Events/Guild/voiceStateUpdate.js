@@ -31,7 +31,7 @@ module.exports = {
       if (user) {
         const introSound = user.introSound;
         if (introSound) { await client.distube.play(voiceChannel, introSound, {
-          member: InteractionCollector.member ?? newState.member,
+          member: interaction.member ?? newState.member,
           textChannel: interaction?.channel ?? pickedTextChannel,
         })
       }
