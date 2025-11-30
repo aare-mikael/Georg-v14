@@ -30,11 +30,7 @@ module.exports = {
       const user = await discordUsers.findOne({ id: newUser.id });
       if (user) {
         const introSound = user.introSound;
-        if (introSound) { await client.distube.play(voiceChannel, introSound, {
-          member: interaction.member ?? newState.member,
-          textChannel: interaction?.channel ?? pickedTextChannel,
-        })
-      }
+        if (introSound) { await client.distube.play(voiceChannel, introSound)}
     }
     } catch (err) {
       console.log(err);
