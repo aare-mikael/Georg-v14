@@ -2,6 +2,8 @@ const { Client, GatewayIntentBits, Partials, Collection } = require("discord.js"
 const { default: OpenAI } = require('openai');
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
+const { YtDlpPlugin } = require("@distube/yt-dlp");
+const { DirectLinkPlugin } = require("@distube/direct-link");
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
 require("dotenv").config();
@@ -17,7 +19,11 @@ const client = new Client({
 client.distube = new DisTube(client, {
   emitNewSongOnly: true,
   emitAddSongWhenCreatingQueue: false,
-  plugins: [new SpotifyPlugin()],
+  plugins: [
+    new SpotifyPlugin(),                // Spotify - Youtube-search
+    new YtDlpPlugin({ update: true }),  // Youtube++
+    new DirectLinkPlugin(),             // raw .mp3 links++
+  ],
 });
 
 client.commands = new Collection();
