@@ -19,7 +19,7 @@ client.distube = new DisTube(client, {
   emitNewSongOnly: true,
   emitAddSongWhenCreatingQueue: false,
 //  leaveOnEmpty: false,
-  leaveOnFinish: true,
+//  leaveOnFinish: true
   leaveOnStop: true,
   plugins: [new SpotifyPlugin()],
 });
