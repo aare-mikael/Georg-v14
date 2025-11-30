@@ -15,9 +15,10 @@ const client = new Client({
 });
 
 client.distube = new DisTube(client, {
+//  directLink: true,
   emitNewSongOnly: true,
   emitAddSongWhenCreatingQueue: false,
-  leaveOnEmpty: false,
+//  leaveOnEmpty: false,
   leaveOnFinish: true,
   leaveOnStop: true,
   plugins: [new SpotifyPlugin()],
