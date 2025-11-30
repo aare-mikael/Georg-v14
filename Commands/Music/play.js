@@ -1,55 +1,62 @@
-const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
+// Commands/Music/play.js
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const client = require("../../index");
-const distube = require("distube");
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName("play")
-        .setDescription("Play a song.")
-        .addStringOption(option =>
-            option.setName("query")
-                .setDescription("Provide the name or url for the song.")
-                .setRequired(true)
-        ),
-    async execute(interaction) {
-        const { options, member, guild, channel } = interaction;
+  data: new SlashCommandBuilder()
+    .setName("play")
+    .setDescription("Play a song.")
+    .addStringOption(o =>
+      o.setName("query").setDescription("Provide the name or URL for the song.").setRequired(true)
+    ),
 
-        const query = options.getString("query");
-        const voiceChannel = member.voice.channel;
+  async execute(interaction) {
+    const { options, member, guild, channel } = interaction;
+    const query = options.getString("query");
+    const vc = member.voice.channel;
 
-        const embed = new EmbedBuilder();
+    // Always ack first so editReply is legal
+    await interaction.deferReply({ ephemeral: false });
 
-        try {
+    const embed = new EmbedBuilder()
+      .setColor("Red")
+      .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() })
+      .setDescription("Loading...");
 
-            embed
-                .setColor("Red")
-                .setDescription(`Loading...`)
-                .setFooter({ text: `Requested by ${member.user.tag}`, iconURL: member.displayAvatarURL() }),
-            interaction.reply({ embeds: [embed], ephemeral: false });
+    await interaction.editReply({ embeds: [embed] });
 
-            if (!voiceChannel) {
-                embed.setColor("Red").setDescription("You must be in a voice channel to execute music commands.");
-                interaction.editReply({ embeds: [embed], ephemeral: false });
-                return;
-            }
-
-            if (!member.voice.channelId == guild.members.me.voice.channelId) {
-                embed.setColor("Red").setDescription(`You can't use the music player in multiple voice channels in the same guild!`);
-                interaction.editReply({ embeds: [embed], ephemeral: false });
-                return;
-            }
-
-            await client.distube.play(voiceChannel, query, { textChannel: channel ?? pickedTextChannel, member: member ?? newStatemember });
-            embed.setColor("Green").setDescription("🎶 Request received.");
-            interaction.editReply({ embeds: [embed], ephemeral: false });
-            return;
-
-        } catch (err) {
-            console.log(err);
-
-            embed.setColor("Red").setDescription("⛔ | Something went wrong...");
-            interaction.editReply({ embeds: [embed], ephemeral: false });
-            return;
-        }
+    // Must be in a VC
+    if (!vc) {
+      embed.setDescription("You must be in a voice channel to execute music commands.");
+      return interaction.editReply({ embeds: [embed] });
     }
-}
+
+    // If the bot is already in another VC in this guild, block
+    const botVcId = guild.members.me.voice.channelId;
+    if (botVcId && botVcId !== vc.id) {
+      embed.setDescription("I’m already playing in another voice channel in this server.");
+      return interaction.editReply({ embeds: [embed] });
+    }
+
+    // Permissions check
+    const perms = vc.permissionsFor(guild.members.me);
+    if (!perms?.has(PermissionsBitField.Flags.Connect) || !perms?.has(PermissionsBitField.Flags.Speak)) {
+      embed.setDescription("I’m missing **Connect**/**Speak** in that voice channel.");
+      return interaction.editReply({ embeds: [embed] });
+    }
+
+    try {
+      await client.distube.play(vc, query, {
+        member,                          // give DisTube context
+        textChannel: channel,            // guarantees queue.textChannel for event embeds
+      });
+
+      embed.setColor("Green").setDescription("🎶 Request received. Check the now-playing embed.");
+      return interaction.editReply({ embeds: [embed] });
+    } catch (err) {
+      console.error(err);
+      embed.setColor("Red").setDescription(`⛔ ${err?.message ?? "Something went wrong..."}`);
+      return interaction.editReply({ embeds: [embed] });
+    }
+  }
+};
