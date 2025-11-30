@@ -39,7 +39,7 @@ module.exports = {
                 return;
             }
 
-            await client.distube.play(voiceChannel, query, { textChannel: channel, member: member });
+            await client.distube.play(voiceChannel, query, { textChannel: channel ?? pickedTextChannel, member: member ?? newStatemember });
             embed.setColor("Green").setDescription("🎶 Request received.");
             interaction.editReply({ embeds: [embed], ephemeral: false });
             return;

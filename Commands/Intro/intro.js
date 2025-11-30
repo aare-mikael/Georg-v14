@@ -40,7 +40,7 @@ module.exports = {
       if (user) {
         const introSound = user.introSound;
         if (introSound) {
-          await client.distube.play(voiceChannel, introSound, { leaveOnStop: true, leaveOnFinish: true });
+          await client.distube.play(voiceChannel, introSound, { leaveOnStop: true, leaveOnFinish: true, member: interaction.member ?? newState.member, textChannel: interaction?.channel ?? pickedTextChannel });
         }
       }
     } catch (err) {
