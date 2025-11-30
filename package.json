@@ -1,6 +1,6 @@
 {
     "name": "v14",
-    "version": "1.0.0",
+    "version": "2.2.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -10,9 +10,11 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@discordjs/opus": "^0.9.0",
-        "@discordjs/voice": "^0.16.0",
-        "@distube/spotify": "^1.5.1",
+        "@discordjs/opus": "0.9.0",
+        "@discordjs/voice": "0.18.0",
+        "@distube/direct-link": "1.0.1",
+        "@distube/spotify": "2.0.2",
+        "@distube/yt-dlp": "2.0.1",
         "@distube/ytdl-core": "^4.14.4",
         "add-dependencies": "^1.1.0",
         "ascii-table": "^0.0.9",
@@ -20,7 +22,7 @@
         "colors": "^1.4.0",
         "cpu-stat": "^2.0.1",
         "discord.js": "^14.11.0",
-        "distube": "^4.0.4",
+        "distube": "5.0.6",
         "dotenv": "^16.1.4",
         "eslint": "^8.50.0",
         "formidable": "^2.1.1",
@@ -29,7 +31,7 @@
         "mongoose": "^7.2.3",
         "nodemon": "^2.0.22",
         "one-liner-joke": "^1.2.2",
-        "openai": "^3.3.0",
+        "openai": "4.52.0",
         "prettier": "^3.0.3",
         "superagent": "^8.0.9"
     }
