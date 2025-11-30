@@ -17,16 +17,30 @@ const client = new Client({
 });
 
 client.distube = new DisTube(client, {
+  plugins: [
+    // 1) Handle raw .mp3/.ogg/.wav/etc FIRST
+    new DirectLinkPlugin({
+      // optional: broaden matchers if you want
+      exts: [".mp3", ".m4a", ".ogg", ".wav"],
+      requestOptions: {
+        // some CDNs like a UA; harmless everywhere
+        headers: { "User-Agent": "Mozilla/5.0 DisTube/5" },
+      },
+    }),
+
+    // 2) Spotify -> YouTube search
+    new SpotifyPlugin(),
+
+    // 3) YouTube + many sites via yt-dlp (quiet mode)
+    new YtDlpPlugin({
+      update: false,                    // don’t auto-update (can spam stdout)
+      ytdlpArgs: ["--no-warnings", "--quiet"], // keep stdout clean JSON
+      // some builds use "args" instead of "ytdlpArgs"; if you see no effect, switch to args
+      // args: ["--no-warnings", "--quiet"],
+    }),
+  ],
   emitNewSongOnly: true,
   emitAddSongWhenCreatingQueue: false,
-  plugins: [
-    new SpotifyPlugin(),                // Spotify - Youtube-search
-    new YtDlpPlugin({ 
-      update: false,
-      ytdlpArgs: ["--no-warnings"]
-    }),  // Youtube++
-    new DirectLinkPlugin(),             // raw .mp3 links++
-  ],
 });
 
 client.commands = new Collection();
