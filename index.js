@@ -21,7 +21,10 @@ client.distube = new DisTube(client, {
   emitAddSongWhenCreatingQueue: false,
   plugins: [
     new SpotifyPlugin(),                // Spotify - Youtube-search
-    new YtDlpPlugin({ update: true }),  // Youtube++
+    new YtDlpPlugin({ 
+      update: false,
+      ytdlpArgs: ["--no-warnings"]
+    }),  // Youtube++
     new DirectLinkPlugin(),             // raw .mp3 links++
   ],
 });
