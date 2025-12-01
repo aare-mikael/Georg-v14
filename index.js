@@ -121,7 +121,7 @@ client.on('messageCreate', async message => {
   }
 });
 
-client.login(token).then(() => {
-  loadEvents(client);
-  loadCommands(client);
+client.login(token).then(async () => {
+  await loadEvents(client);
+  await loadCommands(client);
 });
