@@ -1,25 +1,79 @@
-const { Client, ActivityType } = require('discord.js');
+// Events/Client/ready.js
 const mongoose = require('mongoose');
-const config = require("../../config.json");
-require("colors");
+const config = require('../../config.json');
+const { ActivityType } = require('discord.js');
+
+const ROTATE_MS = 3 * 60 * 1000;
+
+// Build reverse lookup for logs
+const ActivityNameByValue = Object.fromEntries(
+  Object.entries(ActivityType).map(([k, v]) => [v, k])
+);
+
+const ACTIVITIES = [
+  { name: 'you',                    type: ActivityType.Watching },
+  { name: '/play',                  type: ActivityType.Listening },
+  { name: 'music',                  type: ActivityType.Playing },
+  { name: 'queues',                 type: ActivityType.Competing },
+  { name: 'your browsing history',  type: ActivityType.Watching },
+  { name: 'your status',            type: ActivityType.Watching },
+  { name: 'your commands',          type: ActivityType.Watching },
+  { name: 'your voice channel',     type: ActivityType.Listening },
+  { name: 'YouTube',                type: ActivityType.Watching },
+  { name: 'Twitch',                 type: ActivityType.Watching },
+];
+
+// Fisher–Yates
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function applyPresence(client, a) {
+  await client.user.setPresence({ status: 'online', activities: [a] });
+  const now = client.user.presence?.activities?.[0];
+  console.log(`[presence] ${ActivityNameByValue[now?.type] ?? now?.type} "${now?.name}"`);
+}
 
 module.exports = {
-    name: "ready",
-    once: true,
-    async execute(client) {
-        
-        await mongoose.connect(config.mongodb || '', {
-            keepAlive: true,
-        });
+  name: 'ready',
+  once: true,
+  async execute(client) {
+    // DB connect
+    await mongoose.connect(config.mongodb || '', { keepAlive: true });
+    console.log('[+] MongoDB connection succesful.');
 
-        if (mongoose.connect) {
-            console.log('[+]'.green + ' MongoDB connection succesful.')
+    // Clear any old rotator
+    if (client.presenceTimer) clearInterval(client.presenceTimer);
+
+    // Prepare randomized rotation
+    let rotation = shuffle(ACTIVITIES);
+    let idx = 0;
+
+    // Initial presence
+    try {
+      await applyPresence(client, rotation[idx++]);
+    } catch (e) {
+      console.error('[presence:set]', e?.message || e);
+    }
+
+    // Rotate; reshuffle when exhausted
+    client.presenceTimer = setInterval(async () => {
+      try {
+        if (idx >= rotation.length) {
+          rotation = shuffle(ACTIVITIES);
+          idx = 0;
         }
+        await applyPresence(client, rotation[idx++]);
+      } catch (e) {
+        console.error('[presence:rotate]', e?.message || e);
+      }
+    }, ROTATE_MS);
 
-        const activities = ["you", "Netflix", "your browsing history", "your status", "Gameflow", "your gameplay", "PST activities", "your commands", "Twitch", "your voice channel", "your messages", "YouTube", "your DMs", "your profile", "your permissions"];
-        let i = 0;
-
-        setInterval(() => client.user.setPresence({ activities: [{ name: activities[i++ % activities.length], type: ActivityType.Watching }] }), 30000);
-        console.log(`[ONLINE]`.green + ` ${client.user.tag} is online in ${client.guilds.cache.size} servers! `);
-    },
+    console.log(`[ONLINE] ${client.user.tag} is online in ${client.guilds.cache.size} servers!`);
+  },
 };
