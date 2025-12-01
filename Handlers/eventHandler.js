@@ -17,18 +17,29 @@ async function loadEvents(client) {
 
     for (const file of files) {
       const full = path.join(dirPath, file);
+      const isMJS = file.endsWith('.mjs');
+      const isCJS = file.endsWith('.cjs');
       let mod;
 
       try {
-        // ✅ Try CommonJS first to avoid ESM reparse warnings on CJS files
-        mod = require(full);
-      } catch (err) {
-        // If the file is true ESM or has top-level await, require() will fail;
-        // fall back to dynamic import.
-        if (err.code === 'ERR_REQUIRE_ESM' || err.code === 'ERR_REQUIRE_ASYNC_MODULE') {
+        if (isMJS) {
+          // True ESM by extension
           mod = await import(pathToFileURL(full).href);
         } else {
-          console.error(`[eventLoader] require failed for ${dir}/${file}:`, err.message);
+          // Prefer CJS for .js / .cjs
+          mod = require(full);
+        }
+      } catch (err) {
+        // If Node explicitly says "this must be ESM", import it.
+        if (err.code === 'ERR_REQUIRE_ESM') {
+          try {
+            mod = await import(pathToFileURL(full).href);
+          } catch (e2) {
+            console.error(`[eventLoader] import failed for ${dir}/${file}:`, e2.message);
+            continue;
+          }
+        } else {
+          console.error(`[eventLoader] load failed for ${dir}/${file}:`, err.message);
           continue;
         }
       }
@@ -49,6 +60,7 @@ async function loadEvents(client) {
 }
 
 module.exports = { loadEvents };
+
 
 
 /*
