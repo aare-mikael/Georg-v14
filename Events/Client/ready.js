@@ -31,7 +31,7 @@ const ICON = {
 };
 
 // If you also want the literal verb in the text, flip this to true.
-const VERB_IN_NAME = false;
+const VERB_IN_NAME = true;
 
 function labelFor(a) {
   if (!VERB_IN_NAME) return `${ICON[a.type] ?? ''} ${a.name}`.trim();
