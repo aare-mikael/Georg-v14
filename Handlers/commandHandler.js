@@ -1,21 +1,22 @@
-// Handlers/commandHandler.js
 const ascii = require("ascii-table");
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
 
+const isTTY = process.stdout.isTTY;
+
 async function loadCommands(client) {
   const table = new ascii().setHeading("Command", "Status");
   const commandsArray = [];
   const baseDir = path.join(__dirname, "..", "Commands");
-
   const categories = fs.readdirSync(baseDir);
+  let ok = 0, bad = 0;
+
   for (const folder of categories) {
     const folderPath = path.join(baseDir, folder);
     if (!fs.statSync(folderPath).isDirectory()) continue;
 
-    const files = fs
-      .readdirSync(folderPath)
+    const files = fs.readdirSync(folderPath)
       .filter(f => f.endsWith(".js") || f.endsWith(".mjs") || f.endsWith(".cjs"));
 
     for (const file of files) {
@@ -28,51 +29,42 @@ async function loadCommands(client) {
       } catch (err) {
         if (err.code === "ERR_REQUIRE_ESM") {
           try { mod = await import(pathToFileURL(full).href); }
-          catch (e2) {
-            table.addRow(`${folder}/${file}`, "import failed ❌");
-            console.error(`[commandLoader] import failed ${folder}/${file}:`, e2.message);
-            continue;
-          }
-        } else {
-          table.addRow(`${folder}/${file}`, "load error ❌");
-          console.error(`[commandLoader] load failed ${folder}/${file}:`, err.message);
-          continue;
-        }
+          catch (e2) { bad++; table.addRow(`${folder}/${file}`, "import failed ❌"); continue; }
+        } else { bad++; table.addRow(`${folder}/${file}`, "load error ❌"); continue; }
       }
 
-      const commandFile = mod?.default ?? mod;
-      if (!commandFile?.data?.name || typeof commandFile.execute !== "function") {
-        table.addRow(`${folder}/${file}`, "missing data/execute ❌");
-        continue;
+      const command = mod?.default ?? mod;
+      if (!command?.data?.name || typeof command.execute !== "function") {
+        bad++; table.addRow(`${folder}/${file}`, "missing data/execute ❌"); continue;
+      }
+      if (client.commands.has(command.data.name)) {
+        bad++; table.addRow(`${folder}/${file}`, `duplicate "${command.data.name}" ❌`); continue;
       }
 
-      if (client.commands.has(commandFile.data.name)) {
-        table.addRow(`${folder}/${file}`, `duplicate "${commandFile.data.name}" ❌`);
-        continue;
-      }
-
-      client.commands.set(commandFile.data.name, { folder, ...commandFile });
-      commandsArray.push(commandFile.data.toJSON());
-      table.addRow(`${folder}/${file}`, "loaded ✅");
+      client.commands.set(command.data.name, { folder, ...command });
+      commandsArray.push(command.data.toJSON());
+      ok++; table.addRow(`${folder}/${file}`, "loaded ✅");
     }
   }
 
   if (!commandsArray.length) {
+    if (isTTY) console.log(table.toString());
     console.error("No commands loaded.");
-    console.log(table.toString());
     return;
   }
 
-  try {
-    await client.application.commands.set(commandsArray);
-    console.log(table.toString(), `\nLoaded ${commandsArray.length} commands`);
-  } catch (e) {
-    console.error("[commandLoader] register failed:", e.message);
-    console.log(table.toString());
+  await client.application.commands.set(commandsArray);
+
+  // Print once, at the end, in a single write
+  if (isTTY) {
+    console.log(table.toString(), `\nLoaded ${ok} commands (${bad} skipped)`);
+  } else {
+    console.log(`Loaded ${ok} commands (${bad} skipped)`);
   }
 }
 
 module.exports = { loadCommands };
+
 
 
 
