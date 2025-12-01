@@ -23,6 +23,27 @@ const ACTIVITIES = [
   { name: 'Twitch',                 type: ActivityType.Watching },
 ];
 
+const ICON = {
+  [ActivityType.Watching]:  '👀',
+  [ActivityType.Listening]: '🎧',
+  [ActivityType.Playing]:   '🎮',
+  [ActivityType.Competing]: '🏁',
+};
+
+// If you also want the literal verb in the text, flip this to true.
+const VERB_IN_NAME = false;
+
+function labelFor(a) {
+  if (!VERB_IN_NAME) return `${ICON[a.type] ?? ''} ${a.name}`.trim();
+  const verb = {
+    [ActivityType.Watching]:  'watching',
+    [ActivityType.Listening]: 'listening to',
+    [ActivityType.Playing]:   'playing',
+    [ActivityType.Competing]: 'competing in',
+  }[a.type];
+  return `${ICON[a.type] ?? ''} ${verb} ${a.name}`.trim();
+}
+
 // Fisher–Yates
 function shuffle(arr) {
   const a = arr.slice();
@@ -34,18 +55,27 @@ function shuffle(arr) {
 }
 
 async function applyPresence(client, a) {
-  await client.user.setPresence({ status: 'online', activities: [a] });
+  await client.user.setPresence({ status: 'online', activities: [{ name: labelFor(a), type: a.type }] });
   const now = client.user.presence?.activities?.[0];
-  console.log(`[presence] ${ActivityNameByValue[now?.type] ?? now?.type} "${now?.name}"`);
+  console.log('[presence]', now?.type, `"${now?.name}"`);
+}
+
+try {
+    // DB connect
+    await mongoose.connect(config.mongodb);
+    const c = mongoose.connection;
+    console.log(`[+] MongoDB connected: ${c.host}/${c.name} (state=${c.readyState})`);
+} catch (e) {
+    console.error('[MongoDB] connection error:', e.message);
+    process.exit(1);
 }
 
 module.exports = {
   name: 'ready',
   once: true,
   async execute(client) {
-    // DB connect
-    await mongoose.connect(config.mongodb || '', { keepAlive: true });
-    console.log('[+] MongoDB connection succesful.');
+    
+    
 
     // Clear any old rotator
     if (client.presenceTimer) clearInterval(client.presenceTimer);
