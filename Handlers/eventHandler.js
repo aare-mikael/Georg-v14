@@ -1,21 +1,43 @@
 // Handlers/eventHandler.js
-const { readdirSync } = require('fs');
+const fs = require('fs');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
 async function loadEvents(client) {
-  const base = path.join(__dirname, '..', 'Events');
-  const categories = readdirSync(base);
+  const baseDir = path.join(__dirname, '..', 'Events');
+  const categories = fs.readdirSync(baseDir);
 
   for (const dir of categories) {
-    const files = readdirSync(path.join(base, dir)).filter(f => f.endsWith('.js'));
-    for (const file of files) {
-      const full = path.join(base, dir, file);
-      // ✅ import ESM/CJS safely
-      const mod = await import(pathToFileURL(full).href);
-      const event = mod.default ?? mod; // ESM default or CJS module.exports
+    const dirPath = path.join(baseDir, dir);
+    if (!fs.statSync(dirPath).isDirectory()) continue;
 
-      if (!event?.name || typeof event.execute !== 'function') continue;
+    const files = fs
+      .readdirSync(dirPath)
+      .filter(f => f.endsWith('.js') || f.endsWith('.mjs') || f.endsWith('.cjs'));
+
+    for (const file of files) {
+      const full = path.join(dirPath, file);
+      let mod;
+
+      try {
+        // ✅ Try CommonJS first to avoid ESM reparse warnings on CJS files
+        mod = require(full);
+      } catch (err) {
+        // If the file is true ESM or has top-level await, require() will fail;
+        // fall back to dynamic import.
+        if (err.code === 'ERR_REQUIRE_ESM' || err.code === 'ERR_REQUIRE_ASYNC_MODULE') {
+          mod = await import(pathToFileURL(full).href);
+        } else {
+          console.error(`[eventLoader] require failed for ${dir}/${file}:`, err.message);
+          continue;
+        }
+      }
+
+      const event = mod?.default ?? mod;
+      if (!event?.name || typeof event.execute !== 'function') {
+        console.warn(`[eventLoader] Skipping ${dir}/${file} — missing name/execute`);
+        continue;
+      }
 
       if (event.once) {
         client.once(event.name, (...args) => event.execute(...args, client));
