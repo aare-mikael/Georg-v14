@@ -1,84 +1,89 @@
-const client = require("../../index");
-const { ChannelType, GuildVoice, Collection } = require("discord.js");
+// Events/Guild/join-to-create.js (CJS bootstrap)
+const { ChannelType, PermissionsBitField, Collection } = require("discord.js");
 const schema = require("../../Models/join-to-create");
-const { voice } = require("../../index");
-let voiceManager = new Collection()
 
-module.exports = {
-    name: "jointocreate",
-}
+module.exports = (client) => {
+  const voiceOwnerByChannel = new Collection(); // channelId -> ownerUserId
 
-client.on("voiceStateUpdate", async (oldState, newState) => {
-    const { member, guild } = oldState;
-    const newChannel = newState.channel;
-    const oldChannel = oldState.channel;
+  client.on("voiceStateUpdate", async (oldState, newState) => {
+    // Ensure guild context
+    const guild = newState.guild ?? oldState.guild;
+    if (!guild) return;
 
-    const data = await schema.findOne({ Guild: guild.id })
+    const data = await schema.findOne({ Guild: guild.id }).catch(() => null);
     if (!data) return;
 
-    if (data) {
-        const channelid = data.Channel;
-        const channel = client.channels.cache.get(channelid)
-        const userlimit = data.UserLimit;
+    const hubChannel = client.channels.cache.get(data.Channel);
+    if (!hubChannel || hubChannel.type !== ChannelType.GuildVoice) return;
 
-        if (oldChannel !== newChannel && newChannel && newChannel.id === channel.id) {
-            const voiceChannel = await guild.channels.create({
-                name: `🔊 | ${member.user.tag}`,
-                type: ChannelType.GuildVoice,
-                parent: newChannel.parent,
-                permissionOverwrites: [
-                    {
-                        id: member.id,
-                        allow: ["Connect", "ManageChannels"],
-                    },
-                    {
-                        id: guild.id,
-                        allow: ["Connect"],
-                    },
-                ],
-                userLimit: userlimit
-            })
+    const member = newState.member ?? oldState.member;
+    const oldChannel = oldState.channel;
+    const newChannel = newState.channel;
 
-            voiceManager.set(member.id, voiceChannel.id);
+    // User joined the hub -> create private VC
+    if (oldChannel !== newChannel && newChannel && newChannel.id === hubChannel.id) {
+      // sanity: bot perms
+      const me = guild.members.me;
+      const needed = [PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.MoveMembers, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.ViewChannel];
+      if (!me.permissions.has(needed)) {
+        console.warn("[join-to-create] missing perms to create/move channel");
+        return;
+      }
 
-            await newChannel.permissionOverwrites.edit(member, {
-                Connect: false
-            });
-            setTimeout(() => {
-                newChannel.permissionOverwrites.delete(member);
-            }, 30000)
+      const vc = await guild.channels.create({
+        name: `🔊 | ${member.user.tag}`,
+        type: ChannelType.GuildVoice,
+        parent: hubChannel.parent ?? undefined,
+        userLimit: data.UserLimit ?? 0,
+        permissionOverwrites: [
+          { id: member.id, allow: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.ManageChannels] },
+          { id: guild.id,   allow: [PermissionsBitField.Flags.Connect] },
+        ],
+      });
 
-            return setTimeout(() => {
-                member.voice.setChannel(voiceChannel)
-            }, 500)
-        }
+      voiceOwnerByChannel.set(vc.id, member.id);
 
-        const jointocreate = voiceManager.get(member.id);
-        const members = oldChannel?.members
-        .filter((m) => !m.user.bot)
-        .map((m) => m.id)
+      // Prevent hub rejoin loop for 30s
+      await hubChannel.permissionOverwrites.edit(member, { Connect: false }).catch(() => {});
+      setTimeout(() => hubChannel.permissionOverwrites.delete(member).catch(() => {}), 30_000);
 
-        if (
-            jointocreate &&
-            oldChannel.id === jointocreate &&
-            (!newChannel || newChannel.id !== jointocreate)
-        ) {
-            if (members.length > 0) {
-                let randomID = members[Math.floor(Math.random() * members.length)];
-                let randomMember = guild.members.cache.get(randomID);
-                randomMember.voice.setChannel(oldChannel).then((v) => {
-                    oldChannel.setName(randomMember.user.username).catch((e) => null);
-                    oldChannel.permissionOverwrites.edit(randomMember, {
-                        Connect: true,
-                        ManageChannels: True
-                    })
-                })
-                voiceManager.set(member.id, null)
-                voiceManager.set(randomMember.id, oldChannel.id)
-            } else {
-                voiceManager.set(member.id, null)
-                oldChannel.delete().catch((e) => null)
-            }
-        }
+      // move user into their room
+      setTimeout(() => member.voice.setChannel(vc).catch(() => {}), 500);
+      return;
     }
-})
+
+    // Owner left their room -> handover or delete
+    if (oldChannel && voiceOwnerByChannel.has(oldChannel.id)) {
+      const ownerId = voiceOwnerByChannel.get(oldChannel.id);
+      const stillInRoom = oldChannel.members.filter(m => !m.user.bot);
+
+      // If owner left and others remain, transfer ownership
+      if (member.id === ownerId && (!newChannel || newChannel.id !== oldChannel.id)) {
+        if (stillInRoom.size > 0) {
+          const [next] = stillInRoom.random(1);
+          voiceOwnerByChannel.set(oldChannel.id, next.id);
+          oldChannel.setName(`🔊 | ${next.user.tag}`).catch(() => {});
+          oldChannel.permissionOverwrites.edit(next, {
+            Connect: true,
+            ManageChannels: true, // lowercase boolean
+          }).catch(() => {});
+        } else {
+          // empty: delete room
+          voiceOwnerByChannel.delete(oldChannel.id);
+          oldChannel.delete().catch(() => {});
+        }
+      }
+
+      // If room became empty regardless of owner
+      if (oldChannel.members.filter(m => !m.user.bot).size === 0) {
+        voiceOwnerByChannel.delete(oldChannel.id);
+        oldChannel.delete().catch(() => {});
+      }
+    }
+  });
+
+  // cleanup if a room is deleted externally
+  client.on("channelDelete", (ch) => {
+    if (ch.type === ChannelType.GuildVoice) voiceOwnerByChannel.delete(ch.id);
+  });
+};
