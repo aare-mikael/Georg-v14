@@ -60,7 +60,12 @@ async function applyPresence(client, a) {
   console.log('[presence]', now?.type, `"${now?.name}"`);
 }
 
-try {
+module.exports = {
+  name: 'ready',
+  once: true,
+  async execute(client) {
+    
+    try {
     // DB connect
     await mongoose.connect(config.mongodb);
     const c = mongoose.connection;
@@ -69,13 +74,6 @@ try {
     console.error('[MongoDB] connection error:', e.message);
     process.exit(1);
 }
-
-module.exports = {
-  name: 'ready',
-  once: true,
-  async execute(client) {
-    
-    
 
     // Clear any old rotator
     if (client.presenceTimer) clearInterval(client.presenceTimer);
