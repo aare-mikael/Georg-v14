@@ -55,7 +55,7 @@ module.exports = (client) => {
     .on("searchNoResult", (message, query) =>
       safeSend(message?.channel ?? message, { embeds: [new EmbedBuilder().setColor("Red").setDescription(`⛔ | No result found for \`${query}\`!`)] })
     )
-    client.distube.on("error", (where, error) => {
+    .on("error", (where, error) => {
   console.error("[distube:error]", error);
 
   let msg = "⛔ | Something went wrong while trying to play that.";
