@@ -54,8 +54,8 @@ module.exports = {
       embed.setColor("Green").setDescription("🎶 Request received. Check the now-playing embed.");
       return interaction.editReply({ embeds: [embed] });
     } catch (err) {
-      console.error(err);
-      embed.setColor("Red").setDescription(`⛔ ${err?.message ?? "Something went wrong..."}`);
+      console.error("[/play]", err);
+      embed.setColor("Red").setDescription(`⛔ "Something went wrong..."}`);
       return interaction.editReply({ embeds: [embed] });
     }
   }
