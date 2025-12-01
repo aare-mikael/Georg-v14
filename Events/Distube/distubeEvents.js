@@ -55,5 +55,27 @@ module.exports = (client) => {
     .on("searchNoResult", (message, query) =>
       safeSend(message?.channel ?? message, { embeds: [new EmbedBuilder().setColor("Red").setDescription(`⛔ | No result found for \`${query}\`!`)] })
     )
-    .on("error", (channel, e) => safeSend(channel, `⛔ | ${e?.message ?? String(e)}`));
+    client.distube.on("error", (where, error) => {
+  console.error("[distube:error]", error);
+
+  let msg = "⛔ | Something went wrong while trying to play that.";
+
+  const code = error?.errorCode;
+  const text = String(error?.message ?? error ?? "");
+
+  if (code === "NO_RESULT") {
+    msg = "⛔ | I couldn't find anything matching that query.";
+  } else if (code === "YTDLP_ERROR") {
+    if (text.includes("Sign in to confirm you’re not a bot")) {
+      msg = "⛔ | YouTube is requiring a login / bot check for this video, so I can't play it from this server. Try a different video or a direct audio link.";
+    } else if (text.includes("--no-call-home")) {
+      msg = "⛔ | The extractor complained about a deprecated option. Try a different video or try again later.";
+    } else {
+      msg = "⛔ | The extractor (yt-dlp) failed for this URL. It may be blocked, age-restricted, or region-locked.";
+    }
+  }
+
+  safeSend(where, msg);
+});
+
 };
